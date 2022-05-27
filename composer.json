@@ -1,0 +1,42 @@
+{
+    "name": "oscar-rey/mercado-pago",
+    "description": "Paquete mercado pago para laravel",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Oscar Rey",
+            "email": "oscarhumberto1311@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.0",
+        "mercadopago/dx-php": "^2.4"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^7.5"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "OscarRey\\MercadoPago\\": "src/"
+        },
+        "files": [
+            "src/Support/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+          "OscarRey\\MercadoPago\\Tests\\": "tests"
+        }
+      },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "OscarRey\\MercadoPago\\MercadoPagoServiceProvider"
+            ],
+            "aliases": {
+                "MercadoPago": "OscarRey\\MercadoPago\\Facades\\MercadoPago"
+            }
+        }
+    }
+}
