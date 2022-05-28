@@ -71,7 +71,36 @@ class MecadoPagoTest extends TestCase
         $preference->save();
 
         $this->assertNotNull($preference->id);
+
    
+       }
+
+        /** @test */
+      public function crear_suscripcion() {
+
+        $suscripcion = MercadoPago()->createPreapproval(
+          "Monthly subscription to premium package"
+        );
+
+        $suscripcion->payer_email = $this->getUserTest()[1]['email'];
+         
+        $suscripcion->auto_recurring = array( 
+          "frequency" => 1,
+          "frequency_type" => "months",
+          "transaction_amount" => 50000,
+          "currency_id" => "COP", // your currency
+      );
+  
+        $suscripcion->save();
+
+        $this->assertNotNull($suscripcion->id);
+
+        $findById = MercadoPago()->preapprovalFindBydId($suscripcion->id);
+
+        $this->assertEquals($suscripcion->id, $findById->id);
+
+         $this->assertArrayHasKey(0, MercadoPago()->findPreapproval());
+
        }
  
 }

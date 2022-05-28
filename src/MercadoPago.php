@@ -10,8 +10,12 @@ use MercadoPago\{
   Customer,
   Card,
   Preference,
-  Item
+  Item,
+  Chargeback,
+  Entity
 };
+
+use OscarRey\MercadoPago\Entity\{Preapproval};
 
 class MercadoPago  extends MercadoPagoConfig
 {
@@ -67,8 +71,18 @@ class MercadoPago  extends MercadoPagoConfig
     return new Card();
   }
 
-   /**
-   * Instancia de preference
+    /**
+   * Instancia de Preapproval(
+   * @return Preapproval(
+   * https://github.com/mercadopago/sdk-php/blob/9ca999e06cc8a875a11f0fcf4dccc75b41d020d5/src/MercadoPago/Entities/Preapproval.php
+   */
+  public function preapproval()
+  {
+    return new Preapproval();
+  }
+
+  /**
+   * Instancia de Preference
    * @return Preference
    */
   public function preference()
@@ -77,12 +91,21 @@ class MercadoPago  extends MercadoPagoConfig
   }
 
   /**
-   * Instancia de item
+   * Instancia de Item
    * @return Item
    */
   public function item()
   {
     return new Item();
+  }
+
+  /**
+   * Instancia de Chargeback 
+   * @return Chargeback
+   */
+  public function chargeback()
+  {
+    return new Chargeback();
   }
 
   /**
@@ -127,11 +150,68 @@ class MercadoPago  extends MercadoPagoConfig
    */
   public function paymentFindById($id)
   {
-    $payment = get_class($this->payment());
-
-    $payment = $payment::find_by_id($id);
+    $payment = $this->FindByIdHandler($this->payment(), $id);
 
     return $payment;
+  }
+
+  /**
+   *  Crear suscripción
+   * @param string|null $back_url url de redirección despues del pago
+   * @param string $reason descripción de la suscripción
+   * @return Preapproval
+   */
+  public function createPreapproval($reason, $back_url = null)
+  {
+      $preapproval = $this->preapproval();
+      $preapproval->back_url = $back_url ?? $this->getCallbackUrl();
+      $preapproval->reason = $reason;
+
+      return $preapproval;
+  }
+
+
+  /**
+   * Consultar suscripciones
+   * @param array $filter filtros de suscripción
+   * @return SearchResultsArray
+   * https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_search/get
+   */
+  public function findPreapproval($filter = [])
+  {
+    $preapproval = $this->searchHandler($this->preapproval(), $filter);
+
+    return $preapproval;
+  }
+
+
+    /**
+   * Consultar suscripción por el id
+   * @param string $id
+   * @return Preapproval
+   * https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_id/get
+   */
+  public function preapprovalFindBydId($id)
+  {
+    $preapproval = $this->findByIdHandler($this->preapproval(), $id);
+
+    return $preapproval;
+  }
+
+  
+   /**
+   * find by id
+   * @param Entity $class
+   * @param string $id
+   * @return Entity
+   */
+  public function FindByIdHandler(Entity $class, $id)
+  {
+    $response = get_class($class);
+
+    $response = $response::find_by_id($id);
+
+    return $response;
   }
 
   /**
@@ -142,11 +222,39 @@ class MercadoPago  extends MercadoPagoConfig
    */
   public function paymentFind($filter = [])
   {
-    $payment = get_class($this->payment());
-
-    $payment = $payment::search($filter);
+    $payment = $this->searchHandler($this->payment(), $filter);
 
     return $payment;
+  }
+
+
+  /**
+   * Consultar contracargos
+   * @param array $filter filtros para los contracargos
+   * @return SearchResultsArray
+   * https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/chargebacks
+   */
+  public function chargebackFind($id)
+  {
+    $chargeback = $this->findByIdHandler($this->chargeback(), $id);
+
+    return $chargeback;
+  }
+
+  /**
+   * Consultar pagos
+   * @param Entity $class
+   * @param array $filter filtros para los recursos
+   * @return SearchResultsArray
+   */
+  public function searchHandler(Entity $class, $filter)
+  {
+
+    $class = get_class($class);
+
+    $response = $class::search($filter);
+
+    return $response;
   }
 
 
@@ -154,15 +262,16 @@ class MercadoPago  extends MercadoPagoConfig
    * Crear un pago por efecty
    * @param int $amount
    * @param string|null $url_callback
+   * @param string|null $notification_url
    * @return Payment
    * https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/other-payment-methods
    */
-  public function efecty($amount, $url_callback = null)
+  public function efecty($amount, $notification_url = null,  $url_callback = null)
   {
-    return  $this->paymentHandler('efecty', $amount, $url_callback);
+    return  $this->paymentHandler('efecty', $amount, $notification_url, $url_callback);
   }
 
-    /**
+  /**
    * Crear un pago por walletPurchase
    * @return Preference
    */
@@ -178,12 +287,13 @@ class MercadoPago  extends MercadoPagoConfig
    * Crear un pago por efecty
    * @param int $amount
    * @param string|null $url_callback
+   * @param string|null $notification_url
    * @return Payment
    * https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/other-payment-methods
    */
-  public function pse($amount, $url_callback = null)
+  public function pse($amount, $notification_url = null, $url_callback = null)
   {
-    return  $this->paymentHandler('pse', $amount, $url_callback);
+    return  $this->paymentHandler('pse', $amount, $notification_url, $url_callback);
   }
 
   /**
@@ -191,14 +301,16 @@ class MercadoPago  extends MercadoPagoConfig
    * @param int $amount
    * @param string|null $url_callback
    * @param string $payment_type
+   * @param string|null $notification_url
    * @return Payment
    * https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/other-payment-methods
    */
-  private function paymentHandler($payment_type, $amount, $url_callback = null)
+  public function paymentHandler($payment_type, $amount, $notification_url = null, $url_callback = null)
   {
     $payment = $this->payment();
     $payment->payment_method_id = $payment_type;
     $payment->transaction_amount = $amount;
+    $payment->notification_url = $notification_url;
     $payment->callback_url = $url_callback ?? $this->getCallbackUrl();
     return $payment;
   }
@@ -220,11 +332,11 @@ class MercadoPago  extends MercadoPagoConfig
    */
   public function createUserTest($site_id = 'MCO')
   {
-    $response = SDK::post('/users/test_user', [
-      'json_data' => $this->json([
+    $response = SDK::post('/users/test_user', $this->bodyHttp(
+      [
         'site_id' => $site_id
-      ])
-    ]);
+      ]
+    ));
 
     return $response;
   }
@@ -251,5 +363,17 @@ class MercadoPago  extends MercadoPagoConfig
   {
 
     return json_encode($data);
+  }
+
+  /**
+   * body para las peticiones del sdk mecado pago
+   * @param array $data
+   * @return string
+   */
+  private function bodyHttp($data)
+  {
+     return [
+      'json_data' => $this->json($data)
+      ];
   }
 }
