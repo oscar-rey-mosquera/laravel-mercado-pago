@@ -34,6 +34,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
   {
     return [
       [
+        'rol' => 'vendedor',
         "id" => 1131625646,
         "nickname" => "TESTUWL4UGE3",
         "password" => "qatest1778",
@@ -41,6 +42,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
         "email" => "test_user_57082196@testuser.com"
       ],
       [
+        'rol' => 'Comprador',
         "id" => 1131626824,
         "nickname" => "TETE8274044",
         "password" => "qatest4891",

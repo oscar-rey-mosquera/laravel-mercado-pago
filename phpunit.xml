@@ -23,6 +23,6 @@
         <server name="DB_CONNECTION" value="sqlite"/>
         <server name="DB_DATABASE" value=":memory:"/>
         <server name="APP_ENV" value="testing"/>
-        <env name="MERCADO_PAGO_ACCESS_TOKEN" value="TEST-1933289720341866-052714-edb15679ec0588ce80d44febc8f36e58-415994699" />
+        <env name="MERCADO_PAGO_ACCESS_TOKEN" value="TEST-1437653101513658-052716-34bdbb16bb4b0a1fbb019c91a42dea83-1131625646" />
     </php>
 </phpunit>
