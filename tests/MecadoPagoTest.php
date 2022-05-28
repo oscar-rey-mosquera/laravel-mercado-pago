@@ -101,6 +101,21 @@ class MecadoPagoTest extends TestCase
 
          $this->assertArrayHasKey(0, MercadoPago()->findPreapproval());
 
+        //  $plan = MercadoPago()->createPlan('plan test');
+          
+        //  $plan->auto_recurring = array( 
+        //   "frequency" => 1,
+        //   "frequency_type" => "months",
+        //   "transaction_amount" => 50000,
+        //   "currency_id" => "COP", // your currency
+        //  );
+
+        //  $plan->save();
+
+
+        //  $plan = MercadoPago()->cancelPlan($plan->id);
+
+         
        }
  
 }

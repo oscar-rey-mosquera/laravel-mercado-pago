@@ -15,7 +15,7 @@ use MercadoPago\{
   Entity
 };
 
-use OscarRey\MercadoPago\Entity\{Preapproval};
+use OscarRey\MercadoPago\Entity\{Preapproval, Plan};
 
 class MercadoPago  extends MercadoPagoConfig
 {
@@ -71,7 +71,17 @@ class MercadoPago  extends MercadoPagoConfig
     return new Card();
   }
 
-    /**
+
+  /**
+   * Instancia de plan
+   * @return Plan
+   */
+  public function plan()
+  {
+    return new Plan();
+  }
+
+  /**
    * Instancia de Preapproval(
    * @return Preapproval(
    * https://github.com/mercadopago/sdk-php/blob/9ca999e06cc8a875a11f0fcf4dccc75b41d020d5/src/MercadoPago/Entities/Preapproval.php
@@ -163,11 +173,72 @@ class MercadoPago  extends MercadoPagoConfig
    */
   public function createPreapproval($reason, $back_url = null)
   {
-      $preapproval = $this->preapproval();
-      $preapproval->back_url = $back_url ?? $this->getCallbackUrl();
-      $preapproval->reason = $reason;
+    $preapproval = $this->preapproval();
+    $preapproval->back_url = $back_url ?? $this->getCallbackUrl();
+    $preapproval->reason = $reason;
 
-      return $preapproval;
+    return $preapproval;
+  }
+
+  /**
+   *  Crear plan
+   * @param string $back_url url de redirección una vez terminado el pago
+   * @param string $description descripcion del plan (reason)
+   * @return Plan
+   * https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan/post
+   */
+  public function createPlan($description, $back_url = null)
+  {
+    $plan = $this->plan();
+
+    $plan->reason = $description;
+
+    $plan->back_url = $back_url ?? $this->getCallbackUrl();
+
+    return $plan;
+  }
+
+  /**
+   * Consultar planes
+   * @param array $filter filtros de planes
+   * @return SearchResultsArray
+   * https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan_search/get
+   */
+  public function findPlan($filter = [])
+  {
+    $plan = $this->searchHandler($this->plan(), $filter);
+
+    return $plan;
+  }
+
+   /**
+   * Consultar plan por el id
+   * @param string $id
+   * @return Plan
+   * https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan_id/get
+   */
+  public function planFindById($id)
+  {
+    $plan = $this->findByIdHandler($this->plan(), $id);
+
+    return $plan;
+  }
+
+  /**
+   * Cancelar un plan
+   * @param string $id
+   * @return Plan
+   * https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan_id/put
+   */
+  public function cancelPlan($id)
+  {
+    $plan = $this->planFindById($id);
+
+    $plan->status = 'cancelled';
+
+    $plan->update();
+
+    return  $plan;
   }
 
 
@@ -185,7 +256,7 @@ class MercadoPago  extends MercadoPagoConfig
   }
 
 
-    /**
+  /**
    * Consultar suscripción por el id
    * @param string $id
    * @return Preapproval
@@ -198,8 +269,8 @@ class MercadoPago  extends MercadoPagoConfig
     return $preapproval;
   }
 
-  
-   /**
+
+  /**
    * find by id
    * @param Entity $class
    * @param string $id
@@ -372,8 +443,8 @@ class MercadoPago  extends MercadoPagoConfig
    */
   private function bodyHttp($data)
   {
-     return [
+    return [
       'json_data' => $this->json($data)
-      ];
+    ];
   }
 }
