@@ -20,7 +20,8 @@ use OscarRey\MercadoPago\Entity\{
   Plan,
   PaymentMethod,
   OAuth,
-  Card
+  Card,
+  IdentificationType
 };
 
 class MercadoPago  extends MercadoPagoConfig
@@ -58,6 +59,16 @@ class MercadoPago  extends MercadoPagoConfig
   {
 
     return new PaymentMethod();
+  }
+
+  /**
+   * Instancia de IdentificationType
+   * @return IdentificationType
+   */
+  public function identificationType()
+  {
+
+    return new IdentificationType();
   }
 
   /**
@@ -341,6 +352,20 @@ class MercadoPago  extends MercadoPagoConfig
     $plan = $this->searchHandler($this->plan(), $filter);
 
     return $plan;
+  }
+
+
+
+  /**
+   * Obtener tipos de documentos
+   * @return array
+   * https://www.mercadopago.com.co/developers/es/reference/identification_types/_identification_types/get
+   */
+  public function findIdentificationType()
+  {
+    $identificationType = get_class($this->identificationType());
+
+    return $identificationType::all();
   }
 
   /**

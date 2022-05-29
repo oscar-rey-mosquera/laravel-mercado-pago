@@ -122,6 +122,7 @@ class MecadoPagoTest extends TestCase
          $customer =  MercadoPago()->createCustomerEmail('test@test.es');
 
          $this->assertNotNull($customer->id);
+
        }
  
 }
