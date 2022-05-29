@@ -51,7 +51,7 @@ class MecadoPagoTest extends TestCase
     /** @test */
     public function listar_pagos() {
 
-     $this->assertNotNull(MercadoPago()->paymentFind()[0]->id);
+     $this->assertNotNull(MercadoPago()->findPayment()[0]->id);
 
     }
 
@@ -119,11 +119,9 @@ class MecadoPagoTest extends TestCase
        /** @test */
        public function consultar_usuarios() {
            
-        $customer =  MercadoPago()->createCustomerEmail('test@test.es');
+         $customer =  MercadoPago()->createCustomerEmail('test@test.es');
 
          $this->assertNotNull($customer->id);
-
-         dd(MercadoPago()->authorizationURL('https://hookb.in/2q0bnWKeOJUdLKbdGNPZ'));
        }
  
 }

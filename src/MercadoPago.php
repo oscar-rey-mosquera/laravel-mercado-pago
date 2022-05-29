@@ -8,14 +8,20 @@ use MercadoPago\{
   SearchResultsArray,
   Payer,
   Customer,
-  Card,
   Preference,
   Item,
   Chargeback,
-  Entity
+  Entity,
+  Refund
 };
 
-use OscarRey\MercadoPago\Entity\{Preapproval, Plan, PaymentMethod, OAuth};
+use OscarRey\MercadoPago\Entity\{
+  Preapproval,
+  Plan,
+  PaymentMethod,
+  OAuth,
+  Card
+};
 
 class MercadoPago  extends MercadoPagoConfig
 {
@@ -64,7 +70,16 @@ class MercadoPago  extends MercadoPagoConfig
   }
 
   /**
-   * Instancia de customer
+   * Instancia de Refund
+   * @return Refund
+   */
+  public function refund()
+  {
+    return new Refund();
+  }
+
+  /**
+   * Instancia de Customer
    * @return Customer
    */
   public function customer()
@@ -83,7 +98,7 @@ class MercadoPago  extends MercadoPagoConfig
 
 
   /**
-   * Instancia de plan
+   * Instancia de Plan
    * @return Plan
    */
   public function plan()
@@ -92,7 +107,7 @@ class MercadoPago  extends MercadoPagoConfig
   }
 
   /**
-   * Instancia de oauth
+   * Instancia de OAuth
    * @return OAuth
    */
   public function oauth()
@@ -136,6 +151,40 @@ class MercadoPago  extends MercadoPagoConfig
   public function chargeback()
   {
     return new Chargeback();
+  }
+
+
+  /**
+   * Buscar tarjeta de cerdito por el id del cliente
+   * @param string $customer_id
+   * @return Card|null
+   *https://www.mercadopago.com.co/developers/es/reference/cards/_customers_customer_id_cards/get
+   */
+  public function cardFindById($customer_id)
+  {
+    $card = $this->FindByIdHandler($this->card(), $customer_id);
+
+    return $card;
+  }
+
+  /**
+   * Eliminar targeta de credito
+   * @param string $customer_id
+   * @return Card|null
+   *https://www.mercadopago.com.co/developers/es/reference/cards/_customers_customer_id_cards/get
+   */
+  public function deleteCard($card_id, $customer_id)
+  {
+    $card = $this->cardFindById($customer_id);
+
+    if ($card) {
+      $card->customer_id = $customer_id;
+      $card->id = $card_id;
+
+      $card->delete();
+    }
+
+    return $card;
   }
 
 
@@ -324,6 +373,19 @@ class MercadoPago  extends MercadoPagoConfig
     return  $plan;
   }
 
+  /**
+   * Consultar reembolso de un pago por el payment_id
+   * @param string $payment_id
+   * @return Refund|null
+   *https://www.mercadopago.com.co/developers/es/reference/chargebacks/_payments_id_refunds/get
+   */
+  public function refundFindBydId($payment_id)
+  {
+    $refund = $this->findByIdHandler($this->refund(), $payment_id);
+
+    return $refund;
+  }
+
 
   /**
    * Consultar suscripciones
@@ -342,7 +404,7 @@ class MercadoPago  extends MercadoPagoConfig
   /**
    * Consultar suscripción por el id
    * @param string $id
-   * @return Preapproval
+   * @return Preapproval|null
    * https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_id/get
    */
   public function preapprovalFindBydId($id)
@@ -374,26 +436,13 @@ class MercadoPago  extends MercadoPagoConfig
    * @return SearchResultsArray
    * https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/retrieving-payments
    */
-  public function paymentFind($filter = [])
+  public function findPayment($filter = [])
   {
     $payment = $this->searchHandler($this->payment(), $filter);
 
     return $payment;
   }
 
-
-  /**
-   * Consultar contracargos
-   * @param array $filter filtros para los contracargos
-   * @return SearchResultsArray
-   * https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/chargebacks
-   */
-  public function chargebackFind($id)
-  {
-    $chargeback = $this->findByIdHandler($this->chargeback(), $id);
-
-    return $chargeback;
-  }
 
   /**
    * Consultar pagos
