@@ -21,4 +21,20 @@ class MercadoPagoConfig
 
         return config('mercado-pago.callback_url');
     }
+
+     /**
+     * Retorna app_id de la configuración
+     */
+    public function getAppId() {
+
+        return config('mercado-pago.app_id');
+    }
+
+      /**
+     * Retorna redirect_uri de la configuración
+     */
+    public function getRedirectUri() {
+
+        return config('mercado-pago.redirect_uri');
+    }
 }

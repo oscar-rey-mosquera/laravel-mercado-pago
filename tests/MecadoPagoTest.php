@@ -25,9 +25,7 @@ class MecadoPagoTest extends TestCase
       /**
        * consultar medios de pago
        */
-      $response = MercadoPago()->findPaymentMethods();
-
-      $this->assertEquals($response['code'], 200);
+      $this->assertArrayHasKey(1, MercadoPago()->findPaymentMethod());
 
 
       /** crear por efecry */
@@ -116,6 +114,16 @@ class MecadoPagoTest extends TestCase
         //  $plan = MercadoPago()->cancelPlan($plan->id);
 
          
+       }
+
+       /** @test */
+       public function consultar_usuarios() {
+           
+        $customer =  MercadoPago()->createCustomerEmail('test@test.es');
+
+         $this->assertNotNull($customer->id);
+
+         dd(MercadoPago()->authorizationURL('https://hookb.in/2q0bnWKeOJUdLKbdGNPZ'));
        }
  
 }

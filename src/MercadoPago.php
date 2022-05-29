@@ -15,7 +15,7 @@ use MercadoPago\{
   Entity
 };
 
-use OscarRey\MercadoPago\Entity\{Preapproval, Plan};
+use OscarRey\MercadoPago\Entity\{Preapproval, Plan, PaymentMethod, OAuth};
 
 class MercadoPago  extends MercadoPagoConfig
 {
@@ -42,6 +42,16 @@ class MercadoPago  extends MercadoPagoConfig
   {
 
     return new Payment();
+  }
+
+  /**
+   * Instancia de PaymentMethod
+   * @return PaymentMethod
+   */
+  public function paymentMethod()
+  {
+
+    return new PaymentMethod();
   }
 
   /**
@@ -82,6 +92,16 @@ class MercadoPago  extends MercadoPagoConfig
   }
 
   /**
+   * Instancia de oauth
+   * @return OAuth
+   */
+  public function oauth()
+  {
+    return new OAuth();
+  }
+
+
+  /**
    * Instancia de Preapproval(
    * @return Preapproval(
    * https://github.com/mercadopago/sdk-php/blob/9ca999e06cc8a875a11f0fcf4dccc75b41d020d5/src/MercadoPago/Entities/Preapproval.php
@@ -117,6 +137,69 @@ class MercadoPago  extends MercadoPagoConfig
   {
     return new Chargeback();
   }
+
+
+  /**
+   * Crear cliente con solo el email
+   * @param string $email email del cliente a registrar
+   * @return Customer
+   * https://www.mercadopago.com.co/developers/es/reference/customers/_customers/post
+   */
+  public function createCustomerEmail($email)
+  {
+    $customer = $this->customerFindByEmail($email);
+
+    if (!$customer) {
+
+      $customer = $this->customer();
+
+      $customer->email = $email;
+
+      $customer->save();
+    }
+
+    return $customer;
+  }
+
+  /**
+   * Consultar planes
+   * @param array $filter filtros de customer
+   * @return SearchResultsArray
+   * https://www.mercadopago.com.co/developers/es/reference/customers/_customers_search/get
+   */
+  public function findCustomer($filter = [])
+  {
+    $customer = $this->searchHandler($this->customer(), $filter);
+
+    return $customer;
+  }
+
+  /**
+   * Buscar cliente por id
+   * @param string $email
+   * @return Customer|null
+   * https://www.mercadopago.com.co/developers/es/reference/customers/_customers_id/get
+   */
+  public function customerFindByEmail($email)
+  {
+    $customer = $this->findCustomer(['email' => $email]);
+
+    return $customer[0] ?? null;
+  }
+
+  /**
+   * Buscar cliente por id
+   * @param string $id
+   * @return Customer|null
+   * https://www.mercadopago.com.co/developers/es/reference/customers/_customers_id/get
+   */
+  public function customerFindById($id)
+  {
+    $customer = $this->FindByIdHandler($this->customer(), $id);
+
+    return $customer;
+  }
+
 
   /**
    * Reembolsar un pago
@@ -211,7 +294,7 @@ class MercadoPago  extends MercadoPagoConfig
     return $plan;
   }
 
-   /**
+  /**
    * Consultar plan por el id
    * @param string $id
    * @return Plan
@@ -401,7 +484,7 @@ class MercadoPago  extends MercadoPagoConfig
    * https://www.mercadopago.com.co/developers/es/reference/test_user/_users_test_user/post
    * @param string $site_id id del sitio donde se creará el usuario de prueba.
    */
-  public function createUserTest($site_id = 'MCO')
+  public function createTestUser($site_id = 'MCO')
   {
     $response = SDK::post('/users/test_user', $this->bodyHttp(
       [
@@ -415,13 +498,13 @@ class MercadoPago  extends MercadoPagoConfig
   /**
    * Consultar los medios de pago disponibles 
    * https://www.mercadopago.com.co/developers/es/reference/payment_methods/_payment_methods/get
-   * 
+   * @return array
    */
-  public function findPaymentMethods()
+  public function findPaymentMethod()
   {
-    $response = SDK::get("{$this->api_version}/payment_methods");
+    $response = get_class($this->paymentMethod());
 
-    return $response;
+    return $response::all();
   }
 
 
@@ -434,6 +517,20 @@ class MercadoPago  extends MercadoPagoConfig
   {
 
     return json_encode($data);
+  }
+
+  /**
+   * Returna la url de authorización de cuenta mercado pago
+   * @param string|null $redirect_uri
+   * @return string
+   */
+  public function authorizationURL($redirect_uri = null, $random_id = null)
+  {
+    return $this->oauth()->customGetAuthorizationURL(
+      $this->getAppId(),
+      $random_id,
+      $redirect_uri ?? $this->getRedirectUri()
+    );
   }
 
   /**
