@@ -15,13 +15,23 @@ Laravel mercado pago es un paquete que te ayuda a implementar el [sdk](https://g
 
 Para instalar utiliza composer.
 
-```bash
+```.bash
 composer require oscar-rey/laravel-mercado-pago
 ```
+## Configuración 
+
+Una vez haya hecho la instalación puede agregar la variable de entorno MERCADO_PAGO_ACCESS_TOKEN en el archivo .env de tu proyecto de laravel  con el valor de tu access token que encontraras en tu [cuenta de desarrollador de mercado pago](https://www.mercadopago.com.co/developers/panel).
+```bash
+//.env
+MERCADO_PAGO_ACCESS_TOKEN=access_token
+```
+## Publica archivo de configuración 
+
+Publica el archivo de configuración ejecutando php artisan vendor:publish y selecciona el número que tiene como tag mercado-pago.
 
 ## Contribución
 
-Puedes contribuir agregando nuevas funcionalidades, actualizaciones,  factorización de código y notificando errores, con antelación se agradece.
+Puedes contribuir agregando nuevas funcionalidades, actualizaciones,  refactorización de código y notificando errores, con antelación se agradece.
 
 ## License
 
