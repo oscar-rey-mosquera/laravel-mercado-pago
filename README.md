@@ -29,6 +29,24 @@ MERCADO_PAGO_ACCESS_TOKEN=access_token
 
 Publica el archivo de configuración ejecutando php artisan vendor:publish y selecciona el número que tiene como tag mercado-pago.
 
+## Uso del paquete
+
+Accede a la funcionalidad del paquete : 
+```php
+use OscarRey\MercadoPago\MercadoPago;
+use OscarRey\MercadoPago\Facades\MercadoPago;
+
+//Helper global
+MercadoPago()->hello();
+
+//MercadoPago facade
+MercadoPago::hello();
+
+//MercadoPago class
+(new MercadoPago())->hello();
+
+```
+
 ## Contribución
 
 Puedes contribuir agregando nuevas funcionalidades, actualizaciones,  refactorización de código y notificando errores, con antelación se agradece.
