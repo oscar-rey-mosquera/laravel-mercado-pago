@@ -1,6 +1,6 @@
 {
     "name": "oscar-rey/laravel-mercado-pago",
-    "description": "Paquete mercado pago para laravel",
+    "description": "Paquete de mercado pago para laravel.",
     "type": "library",
     "authors": [
         {
