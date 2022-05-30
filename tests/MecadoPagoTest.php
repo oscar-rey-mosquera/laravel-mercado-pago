@@ -122,6 +122,8 @@ class MecadoPagoTest extends TestCase
          $customer =  MercadoPago()->createCustomerEmail('test@test.es');
 
          $this->assertNotNull($customer->id);
+
+         dd(MercadoPago()->findInstoreOrder(34343, 7895));
          
        }
  

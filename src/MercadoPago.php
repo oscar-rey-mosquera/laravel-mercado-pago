@@ -13,7 +13,8 @@ use MercadoPago\{
   Chargeback,
   Entity,
   Refund,
-  POS
+  POS,
+  InstoreOrder
 };
 
 use OscarRey\MercadoPago\Entity\{
@@ -23,7 +24,8 @@ use OscarRey\MercadoPago\Entity\{
   OAuth,
   Card,
   IdentificationType,
-  MerchantOrder
+  MerchantOrder,
+  InstoreOrderV2
 };
 
 class MercadoPago  extends MercadoPagoConfig
@@ -52,6 +54,29 @@ class MercadoPago  extends MercadoPagoConfig
 
     return new Payment();
   }
+
+
+  /**
+   * Instancia de InstoreOrder
+   * @return InstoreOrder
+   * @link https://github.com/mercadopago/sdk-php/blob/9ca999e06cc8a875a11f0fcf4dccc75b41d020d5/src/MercadoPago/Entities/InstoreOrder.php
+   */
+  public function instoreOrder()
+  {
+
+    return new InstoreOrder();
+  }
+
+    /**
+   * Instancia de InstoreOrderV2
+   * @return InstoreOrderV2
+   */
+  public function instoreOrderV2()
+  {
+
+    return new InstoreOrderV2();
+  }
+  
 
   /**
    * Instancia de MerchantOrder
@@ -150,9 +175,9 @@ class MercadoPago  extends MercadoPagoConfig
 
 
   /**
-   * Instancia de Preapproval(
-   * @return Preapproval(
-   * https://github.com/mercadopago/sdk-php/blob/9ca999e06cc8a875a11f0fcf4dccc75b41d020d5/src/MercadoPago/Entities/Preapproval.php
+   * Instancia de Preapproval
+   * @return Preapproval
+   * @link https://github.com/mercadopago/sdk-php/blob/9ca999e06cc8a875a11f0fcf4dccc75b41d020d5/src/MercadoPago/Entities/Preapproval.php
    */
   public function preapproval()
   {
@@ -184,6 +209,21 @@ class MercadoPago  extends MercadoPagoConfig
   public function chargeback()
   {
     return new Chargeback();
+  }
+
+
+  /**
+   * Buscar una órden presencial por user_id y external_pos_id
+   * @param string $user_id
+   * * @param string $external_pos_id
+   * @return InstoreOrder|null
+   * @link https://www.mercadopago.com.co/developers/es/reference/instore_orders_v2/_instore_qr_seller_collectors_user_id_pos_external_pos_id_orders/get
+   */
+  public function findInstoreOrder($user_id, $external_pos_id)
+  {
+    $order = get_class($this->instoreOrderV2()); 
+
+    return $order::get("/instore/qr/seller/collectors/{$user_id}/pos/{$external_pos_id}/orders");
   }
 
 
@@ -270,6 +310,18 @@ class MercadoPago  extends MercadoPagoConfig
     return $merchantOrder;
   }
 
+  /**
+   * Buscar órden comercial por id
+   * @param int $id
+   * @return MerchantOrder|null
+   * @link https://www.mercadopago.com.co/developers/es/reference/merchant_orders/_merchant_orders_id/get
+   */
+  public function merchantOrderFindById($id)
+  {
+    $merchantOrder = $this->FindByIdHandler($this->merchantOrder(), $id);
+
+    return $merchantOrder;
+  }
 
   /**
    * Consultar cajas 
