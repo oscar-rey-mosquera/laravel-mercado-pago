@@ -12,7 +12,8 @@ use MercadoPago\{
   Item,
   Chargeback,
   Entity,
-  Refund
+  Refund,
+  POS
 };
 
 use OscarRey\MercadoPago\Entity\{
@@ -21,7 +22,8 @@ use OscarRey\MercadoPago\Entity\{
   PaymentMethod,
   OAuth,
   Card,
-  IdentificationType
+  IdentificationType,
+  MerchantOrder
 };
 
 class MercadoPago  extends MercadoPagoConfig
@@ -52,6 +54,16 @@ class MercadoPago  extends MercadoPagoConfig
   }
 
   /**
+   * Instancia de MerchantOrder
+   * @return MerchantOrder
+   */
+  public function merchantOrder()
+  {
+
+    return new MerchantOrder();
+  }
+
+  /**
    * Instancia de PaymentMethod
    * @return PaymentMethod
    */
@@ -59,6 +71,16 @@ class MercadoPago  extends MercadoPagoConfig
   {
 
     return new PaymentMethod();
+  }
+
+  /**
+   * Instancia de POS
+   * @return POS
+   */
+  public function pos()
+  {
+
+    return new POS();
   }
 
   /**
@@ -169,7 +191,7 @@ class MercadoPago  extends MercadoPagoConfig
    * Buscar tarjeta de cerdito por el id del cliente
    * @param string $customer_id
    * @return Card|null
-   *https://www.mercadopago.com.co/developers/es/reference/cards/_customers_customer_id_cards/get
+   * @link https://www.mercadopago.com.co/developers/es/reference/cards/_customers_customer_id_cards/get
    */
   public function cardFindById($customer_id)
   {
@@ -182,7 +204,7 @@ class MercadoPago  extends MercadoPagoConfig
    * Eliminar targeta de credito
    * @param string $customer_id
    * @return Card|null
-   *https://www.mercadopago.com.co/developers/es/reference/cards/_customers_customer_id_cards/get
+   * @link https://www.mercadopago.com.co/developers/es/reference/cards/_customers_customer_id_cards/get
    */
   public function deleteCard($card_id, $customer_id)
   {
@@ -203,7 +225,7 @@ class MercadoPago  extends MercadoPagoConfig
    * Crear cliente con solo el email
    * @param string $email email del cliente a registrar
    * @return Customer
-   * https://www.mercadopago.com.co/developers/es/reference/customers/_customers/post
+   * @link https://www.mercadopago.com.co/developers/es/reference/customers/_customers/post
    */
   public function createCustomerEmail($email)
   {
@@ -225,7 +247,7 @@ class MercadoPago  extends MercadoPagoConfig
    * Consultar planes
    * @param array $filter filtros de customer
    * @return SearchResultsArray
-   * https://www.mercadopago.com.co/developers/es/reference/customers/_customers_search/get
+   * @link https://www.mercadopago.com.co/developers/es/reference/customers/_customers_search/get
    */
   public function findCustomer($filter = [])
   {
@@ -234,11 +256,70 @@ class MercadoPago  extends MercadoPagoConfig
     return $customer;
   }
 
+
+  /**
+   * Consultar órdenes comerciales
+   * @param array $filter filtros de ordenes comerciales
+   * @return SearchResultsArray
+   * @link https://www.mercadopago.com.co/developers/es/reference/merchant_orders/_merchant_orders_search/get
+   */
+  public function findMerchantOrder($filter = [])
+  {
+    $merchantOrder = $this->searchHandler($this->merchantOrder(), $filter);
+
+    return $merchantOrder;
+  }
+
+
+  /**
+   * Consultar cajas 
+   * @param array $filter filtros de pos
+   * @return SearchResultsArray
+   * @link https://www.mercadopago.com.co/developers/es/reference/pos/_pos/get
+   */
+  public function findPos($filter = [])
+  {
+    $pos = $this->searchHandler($this->pos(), $filter);
+
+    return $pos;
+  }
+
+  /**
+   * Buscar caja por id
+   * @param string $id
+   * @return POS|null
+   * @link https://www.mercadopago.com.co/developers/es/reference/pos/_pos_id/get
+   */
+  public function posFindById($id)
+  {
+    $pos = $this->FindByIdHandler($this->pos(), $id);
+
+    return $pos;
+  }
+
+  /**
+   * Eliminar caja
+   * @param string $id
+   * @return POS|null
+   * @link https://www.mercadopago.com.co/developers/es/reference/pos/_pos_id/delete
+   */
+  public function deletePos($id)
+  {
+    $pos = $this->posFindById($id);
+
+    if ($pos) {
+
+      $pos->delete();
+    }
+
+    return $pos;
+  }
+
   /**
    * Buscar cliente por id
    * @param string $email
    * @return Customer|null
-   * https://www.mercadopago.com.co/developers/es/reference/customers/_customers_id/get
+   * @link https://www.mercadopago.com.co/developers/es/reference/customers/_customers_id/get
    */
   public function customerFindByEmail($email)
   {
@@ -251,7 +332,7 @@ class MercadoPago  extends MercadoPagoConfig
    * Buscar cliente por id
    * @param string $id
    * @return Customer|null
-   * https://www.mercadopago.com.co/developers/es/reference/customers/_customers_id/get
+   * @link https://www.mercadopago.com.co/developers/es/reference/customers/_customers_id/get
    */
   public function customerFindById($id)
   {
@@ -266,7 +347,7 @@ class MercadoPago  extends MercadoPagoConfig
    * 
    * @param string $id
    * @return Payment
-   * https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/cancellations-and-refunds
+   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/cancellations-and-refunds
    */
   public function refundPament($id, $amount = 0)
   {
@@ -282,7 +363,7 @@ class MercadoPago  extends MercadoPagoConfig
    * 
    * @param string $id
    * @return Payment
-   * https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/cancellations-and-refunds
+   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/cancellations-and-refunds
    */
   public function cancelPayment($id)
   {
@@ -299,7 +380,7 @@ class MercadoPago  extends MercadoPagoConfig
    * Buscar pago por id
    * @param string $id
    * @return Payment
-   * https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/retrieving-payments
+   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/retrieving-payments
    */
   public function paymentFindById($id)
   {
@@ -328,7 +409,7 @@ class MercadoPago  extends MercadoPagoConfig
    * @param string $back_url url de redirección una vez terminado el pago
    * @param string $description descripcion del plan (reason)
    * @return Plan
-   * https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan/post
+   * @link https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan/post
    */
   public function createPlan($description, $back_url = null)
   {
@@ -345,7 +426,7 @@ class MercadoPago  extends MercadoPagoConfig
    * Consultar planes
    * @param array $filter filtros de planes
    * @return SearchResultsArray
-   * https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan_search/get
+   * @link https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan_search/get
    */
   public function findPlan($filter = [])
   {
@@ -359,7 +440,7 @@ class MercadoPago  extends MercadoPagoConfig
   /**
    * Obtener tipos de documentos
    * @return array
-   * https://www.mercadopago.com.co/developers/es/reference/identification_types/_identification_types/get
+   * @link https://www.mercadopago.com.co/developers/es/reference/identification_types/_identification_types/get
    */
   public function findIdentificationType()
   {
@@ -372,7 +453,7 @@ class MercadoPago  extends MercadoPagoConfig
    * Consultar plan por el id
    * @param string $id
    * @return Plan
-   * https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan_id/get
+   * @link https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan_id/get
    */
   public function planFindById($id)
   {
@@ -385,7 +466,7 @@ class MercadoPago  extends MercadoPagoConfig
    * Cancelar un plan
    * @param string $id
    * @return Plan
-   * https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan_id/put
+   * @link https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan_id/put
    */
   public function cancelPlan($id)
   {
@@ -402,7 +483,7 @@ class MercadoPago  extends MercadoPagoConfig
    * Consultar reembolso de un pago por el payment_id
    * @param string $payment_id
    * @return Refund|null
-   *https://www.mercadopago.com.co/developers/es/reference/chargebacks/_payments_id_refunds/get
+   * @link https://www.mercadopago.com.co/developers/es/reference/chargebacks/_payments_id_refunds/get
    */
   public function refundFindBydId($payment_id)
   {
@@ -416,7 +497,7 @@ class MercadoPago  extends MercadoPagoConfig
    * Consultar suscripciones
    * @param array $filter filtros de suscripción
    * @return SearchResultsArray
-   * https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_search/get
+   * @link https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_search/get
    */
   public function findPreapproval($filter = [])
   {
@@ -430,7 +511,7 @@ class MercadoPago  extends MercadoPagoConfig
    * Consultar suscripción por el id
    * @param string $id
    * @return Preapproval|null
-   * https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_id/get
+   * @link https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_id/get
    */
   public function preapprovalFindBydId($id)
   {
@@ -459,7 +540,7 @@ class MercadoPago  extends MercadoPagoConfig
    * Consultar pagos
    * @param array $filter filtros para los pagos
    * @return SearchResultsArray
-   * https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/retrieving-payments
+   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/retrieving-payments
    */
   public function findPayment($filter = [])
   {
@@ -492,7 +573,7 @@ class MercadoPago  extends MercadoPagoConfig
    * @param string|null $url_callback
    * @param string|null $notification_url
    * @return Payment
-   * https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/other-payment-methods
+   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/other-payment-methods
    */
   public function efecty($amount, $notification_url = null,  $url_callback = null)
   {
@@ -517,7 +598,7 @@ class MercadoPago  extends MercadoPagoConfig
    * @param string|null $url_callback
    * @param string|null $notification_url
    * @return Payment
-   * https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/other-payment-methods
+   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/other-payment-methods
    */
   public function pse($amount, $notification_url = null, $url_callback = null)
   {
@@ -531,7 +612,7 @@ class MercadoPago  extends MercadoPagoConfig
    * @param string $payment_type
    * @param string|null $notification_url
    * @return Payment
-   * https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/other-payment-methods
+   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/other-payment-methods
    */
   public function paymentHandler($payment_type, $amount, $notification_url = null, $url_callback = null)
   {
@@ -545,7 +626,7 @@ class MercadoPago  extends MercadoPagoConfig
 
   /**
    * Inicializa el sdk de mercado pago
-   * https://github.com/mercadopago/sdk-php
+   * @link https://github.com/mercadopago/sdk-php
    */
   public function initSdk()
   {
@@ -555,7 +636,7 @@ class MercadoPago  extends MercadoPagoConfig
 
   /**
    * crear usuarios para hacer test
-   * https://www.mercadopago.com.co/developers/es/reference/test_user/_users_test_user/post
+   * @link https://www.mercadopago.com.co/developers/es/reference/test_user/_users_test_user/post
    * @param string $site_id id del sitio donde se creará el usuario de prueba.
    */
   public function createTestUser($site_id = 'MCO')
@@ -571,7 +652,7 @@ class MercadoPago  extends MercadoPagoConfig
 
   /**
    * Consultar los medios de pago disponibles 
-   * https://www.mercadopago.com.co/developers/es/reference/payment_methods/_payment_methods/get
+   * @link https://www.mercadopago.com.co/developers/es/reference/payment_methods/_payment_methods/get
    * @return array
    */
   public function findPaymentMethod()
