@@ -8,6 +8,14 @@
             "email": "oscarhumberto1311@gmail.com"
         }
     ],
+    "homepage": "https://github.com/oscar-rey-mosquera/laravel-mercado-pago",
+    "keywords": [
+        "Laravel",
+        "laravel-mercado-pago",
+        "pagos",
+        "mercado pago",
+        "paquete"
+    ],
     "require": {
         "php": ">=7.1.0",
         "mercadopago/dx-php": "^2.4"
