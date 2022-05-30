@@ -123,7 +123,6 @@ class MecadoPagoTest extends TestCase
 
          $this->assertNotNull($customer->id);
 
-         dd(MercadoPago()->findInstoreOrder(34343, 7895));
          
        }
  

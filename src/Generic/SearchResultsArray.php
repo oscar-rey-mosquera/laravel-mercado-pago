@@ -1,9 +1,12 @@
 <?php
 namespace OscarRey\MercadoPago\Generic;
 
+use OscarRey\MercadoPago\Traits\EntityTrait;
+
 
 class SearchResultsArray extends \MercadoPago\SearchResultsArray 
 {
+   use EntityTrait;
   
     public function fetch($filters, $body) {
         $this->_filters = $filters;

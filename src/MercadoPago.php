@@ -25,7 +25,10 @@ use OscarRey\MercadoPago\Entity\{
   Card,
   IdentificationType,
   MerchantOrder,
-  InstoreOrderV2
+  InstoreOrderV2,
+  Store,
+  InstoreOrderQr,
+  AuthorizedPayment
 };
 
 class MercadoPago  extends MercadoPagoConfig
@@ -55,6 +58,25 @@ class MercadoPago  extends MercadoPagoConfig
     return new Payment();
   }
 
+  /**
+   * Instancia de Store
+   * @return Store
+   */
+  public function store()
+  {
+
+    return new Store();
+  }
+
+    /**
+   * Instancia de  AuthorizedPayment
+   * @return  AuthorizedPayment
+   */
+  public function authorizedPayment()
+  {
+
+    return new AuthorizedPayment();
+  }
 
   /**
    * Instancia de InstoreOrder
@@ -67,7 +89,18 @@ class MercadoPago  extends MercadoPagoConfig
     return new InstoreOrder();
   }
 
-    /**
+  /**
+   * Instancia de InstoreOrderQr
+   * @return InstoreOrderQr
+   * @link https://www.mercadopago.com.co/developers/es/reference/qr-dynamic/_instore_orders_qr_seller_collectors_user_id_pos_external_pos_id_qrs/post
+   */
+  public function instoreOrderQr()
+  {
+
+    return new InstoreOrderQr();
+  }
+
+  /**
    * Instancia de InstoreOrderV2
    * @return InstoreOrderV2
    */
@@ -76,7 +109,7 @@ class MercadoPago  extends MercadoPagoConfig
 
     return new InstoreOrderV2();
   }
-  
+
 
   /**
    * Instancia de MerchantOrder
@@ -211,17 +244,102 @@ class MercadoPago  extends MercadoPagoConfig
     return new Chargeback();
   }
 
+  /**
+   * País de localidad de cuenta de mercado pago
+   * @return string
+   */
+  public function getCountryId()
+  {
+    return SDK::getCountryId();
+  }
+
+  /**
+   * Obtiene toda la información de una factura a partir de su ID. Las facturas se programan automáticamente y se cobran en función de la recurrencia definida en la suscripción.
+   * @param int $id
+   * @return AuthorizedPayment|null
+   * @link https://www.mercadopago.com.co/developers/es/reference/subscriptions/_authorized_payments_id/get
+   */
+  public function  authorizedPaymentFindById($id)
+  {
+    $authorizedPayment = $this->FindByIdHandler($this->authorizedPayment(), $id);
+
+    return $authorizedPayment;
+  }
+
+    /**
+   * Busca las facturas de una suscripción mediante diferentes parámetros. Puedes buscar por suscripción, pago o Customer ID.
+   * @param array $filter filtros de sucursales
+   * @return SearchResultsArray
+   * @link https://www.mercadopago.com.co/developers/es/reference/subscriptions/_authorized_payments_search/get
+   */
+  public function findAuthorizedPayment($filter = [])
+  {
+    $authorizedPayment = $this->searchHandler($this->authorizedPayment(), $filter);
+
+    return $authorizedPayment;
+  }
+
+
+  /**
+   * Consulta toda la información de una tienda física con el ID de la sucursal que quieras.
+   * @param int $id
+   * @return Store|null
+   * @link https://www.mercadopago.com.co/developers/es/reference/stores/_stores_id/get
+   */
+  public function storeFindById($id)
+  {
+    $store = $this->FindByIdHandler($this->store(), $id);
+
+    return $store;
+  }
+
+  
+  /**
+   * Elimina una tienda física siempre que lo necesites con el ID de la sucursal.
+   * @param int $id
+   * @return Store|null
+   * @link https://www.mercadopago.com.co/developers/es/reference/stores/_users_user_id_stores_id/delete
+   */
+  public function deleteStore($id)
+  {
+    $store = $this->storeFindById($id);
+
+    if ($store) {
+
+      $store->delete();
+    }
+
+    return $store;
+  }
+
+  /**
+   * Encuentra toda la información de las sucursales generadas a través de filtros específicos.
+   * @param array $filter filtros de sucursales
+   * @param string $user_id encuentre el id del usuario en su panel de desarrollador en nuestro sitio para desarrolladores mercado pago
+   * @return SearchResultsArray
+   * @link https://www.mercadopago.com.co/developers/es/reference/stores/_users_user_id_stores_search/get
+   */
+  public function findStore($user_id, $filter = [])
+  {
+    $store = $this->searchHandler($this->store(), array_merge([
+      ['user_id' => $user_id],
+      $filter
+    ]));
+
+    return $store;
+  }
+
 
   /**
    * Buscar una órden presencial por user_id y external_pos_id
-   * @param string $user_id
+   * @param string $user_id encuentre el id del usuario en su panel de desarrollador en nuestro sitio para desarrolladores mercado pago
    * * @param string $external_pos_id
    * @return InstoreOrder|null
    * @link https://www.mercadopago.com.co/developers/es/reference/instore_orders_v2/_instore_qr_seller_collectors_user_id_pos_external_pos_id_orders/get
    */
   public function findInstoreOrder($user_id, $external_pos_id)
   {
-    $order = get_class($this->instoreOrderV2()); 
+    $order = get_class($this->instoreOrderV2());
 
     return $order::get("/instore/qr/seller/collectors/{$user_id}/pos/{$external_pos_id}/orders");
   }
@@ -284,8 +402,8 @@ class MercadoPago  extends MercadoPagoConfig
   }
 
   /**
-   * Consultar planes
-   * @param array $filter filtros de customer
+   * Consultar clientes
+   * @param array $filter filtros de clientes
    * @return SearchResultsArray
    * @link https://www.mercadopago.com.co/developers/es/reference/customers/_customers_search/get
    */
