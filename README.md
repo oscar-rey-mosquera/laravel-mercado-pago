@@ -46,6 +46,20 @@ MercadoPago::hello();
 (new MercadoPago())->hello();
 
 ```
+
+### Obtener medios de pago disponibles.
+
+Consulta todos los medios de pago disponibles y obtén un listado con el detalle de cada uno y sus propiedades [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/payment_methods/_payment_methods/get).. 
+```php
+  /**
+   * Instancia de PaymentMethod
+   * @link https://github.com/oscar-rey-mosquera/laravel-mercado-pago/blob/main/src/Entity/PaymentMethod.php
+   */
+    MercadoPago()->paymentMethod();
+    
+   
+```
+
 ### Integra Checkout API para pagos con tarjetas
 
 La integración del Checkout API de Mercado Pago para tarjetas permite que puedas ofrecer una opción de pagos completa dentro de tu sitio [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/receiving-payment-by-card).
