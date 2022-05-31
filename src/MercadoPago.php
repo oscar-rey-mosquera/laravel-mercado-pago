@@ -4,18 +4,15 @@ namespace OscarRey\MercadoPago;
 
 use MercadoPago\{
   SDK,
-  Payment,
-  SearchResultsArray,
   Payer,
-  Customer,
-  Preference,
   Item,
   Chargeback,
   Entity,
   Refund,
-  POS,
   InstoreOrder
 };
+
+use OscarRey\MercadoPago\Traits\ConfigTrait;
 
 use OscarRey\MercadoPago\Entity\{
   Preapproval,
@@ -28,11 +25,17 @@ use OscarRey\MercadoPago\Entity\{
   InstoreOrderV2,
   Store,
   InstoreOrderQr,
-  AuthorizedPayment
+  AuthorizedPayment,
+  Payment,
+  Customer,
+  Preference,
+  POS
 };
 
-class MercadoPago  extends MercadoPagoConfig
+class MercadoPago
 {
+
+   use ConfigTrait; 
 
   public function __construct()
   {
@@ -274,159 +277,6 @@ class MercadoPago  extends MercadoPagoConfig
     return $card;
   }
 
-  /**
-   * Crear cliente con solo el email
-   * @param string $email email del cliente a registrar
-   * @return Customer
-   * @link https://www.mercadopago.com.co/developers/es/reference/customers/_customers/post
-   */
-  public function createCustomerEmail($email)
-  {
-    $customer = $this->customerFindByEmail($email);
-
-    if (!$customer) {
-
-      $customer = $this->customer();
-
-      $customer->email = $email;
-
-      $customer->save();
-    }
-
-    return $customer;
-  }
-
-  /**
-   * Consultar clientes
-   * @param array $filter filtros de clientes
-   * @return SearchResultsArray
-   * @link https://www.mercadopago.com.co/developers/es/reference/customers/_customers_search/get
-   */
-  public function findCustomer($filter = [])
-  {
-    $customer = $this->searchHandler($this->customer(), $filter);
-
-    return $customer;
-  }
-
-
-  /**
-   * Consultar cajas 
-   * @param array $filter filtros de pos
-   * @return SearchResultsArray
-   * @link https://www.mercadopago.com.co/developers/es/reference/pos/_pos/get
-   */
-  public function findPos($filter = [])
-  {
-    $pos = $this->searchHandler($this->pos(), $filter);
-
-    return $pos;
-  }
-
-  /**
-   * Buscar caja por id
-   * @param string $id
-   * @return POS|null
-   * @link https://www.mercadopago.com.co/developers/es/reference/pos/_pos_id/get
-   */
-  public function posFindById($id)
-  {
-    $pos = $this->FindByIdHandler($this->pos(), $id);
-
-    return $pos;
-  }
-
-  /**
-   * Eliminar caja
-   * @param string $id
-   * @return POS|null
-   * @link https://www.mercadopago.com.co/developers/es/reference/pos/_pos_id/delete
-   */
-  public function deletePos($id)
-  {
-    $pos = $this->posFindById($id);
-
-    if ($pos) {
-
-      $pos->delete();
-    }
-
-    return $pos;
-  }
-
-  /**
-   * Buscar cliente por id
-   * @param string $email
-   * @return Customer|null
-   * @link https://www.mercadopago.com.co/developers/es/reference/customers/_customers_id/get
-   */
-  public function customerFindByEmail($email)
-  {
-    $customer = $this->findCustomer(['email' => $email]);
-
-    return $customer[0] ?? null;
-  }
-
-  /**
-   * Buscar cliente por id
-   * @param string $id
-   * @return Customer|null
-   * @link https://www.mercadopago.com.co/developers/es/reference/customers/_customers_id/get
-   */
-  public function customerFindById($id)
-  {
-    $customer = $this->FindByIdHandler($this->customer(), $id);
-
-    return $customer;
-  }
-
-
-  /**
-   * Reembolsar un pago
-   * 
-   * @param string $id
-   * @return Payment
-   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/cancellations-and-refunds
-   */
-  public function refundPament($id, $amount = 0)
-  {
-    $payment = $this->paymentFindById($id);
-
-    $payment->refund($amount);
-
-    return $payment;
-  }
-
-  /**
-   * Cancelar un pago
-   * 
-   * @param string $id
-   * @return Payment
-   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/cancellations-and-refunds
-   */
-  public function cancelPayment($id)
-  {
-    $payment = $this->paymentFindById($id);
-
-    $payment->status = 'cancelled';
-
-    $payment->update();
-
-    return  $payment;
-  }
-
-  /**
-   * Buscar pago por id
-   * @param string $id
-   * @return Payment
-   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/retrieving-payments
-   */
-  public function paymentFindById($id)
-  {
-    $payment = $this->FindByIdHandler($this->payment(), $id);
-
-    return $payment;
-  }
 
   /**
    *  Crear suscripción
@@ -490,94 +340,6 @@ class MercadoPago  extends MercadoPagoConfig
   }
 
   /**
-   * Consultar pagos
-   * @param array $filter filtros para los pagos
-   * @return SearchResultsArray
-   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/retrieving-payments
-   */
-  public function findPayment($filter = [])
-  {
-    $payment = $this->searchHandler($this->payment(), $filter);
-
-    return $payment;
-  }
-
-
-  /**
-   * Consultar con filtro
-   * @param Entity $class
-   * @param array $filter filtros para los recursos
-   * @return SearchResultsArray
-   */
-  public function searchHandler(Entity $class, $filter)
-  {
-
-    $class = get_class($class);
-
-    $response = $class::search($filter);
-
-    return $response;
-  }
-
-
-  /**
-   * Crear un pago por efecty
-   * @param int $amount
-   * @param string|null $url_callback
-   * @param string|null $notification_url
-   * @return Payment
-   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/other-payment-methods
-   */
-  public function efecty($amount, $notification_url = null,  $url_callback = null)
-  {
-    return  $this->paymentHandler('efecty', $amount, $notification_url, $url_callback);
-  }
-
-  /**
-   * Crear un pago por walletPurchase
-   * @return Preference
-   */
-  public function walletPurchase()
-  {
-    $preference = $this->preference();
-    $preference->purpose = 'wallet_purchase';
-
-    return $preference;
-  }
-
-  /**
-   * Crear un pago por efecty
-   * @param int $amount
-   * @param string|null $url_callback
-   * @param string|null $notification_url
-   * @return Payment
-   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/other-payment-methods
-   */
-  public function pse($amount, $notification_url = null, $url_callback = null)
-  {
-    return  $this->paymentHandler('pse', $amount, $notification_url, $url_callback);
-  }
-
-  /**
-   * Manejador de payment
-   * @param int $amount
-   * @param string|null $url_callback
-   * @param string $payment_type
-   * @param string|null $notification_url
-   * @return Payment
-   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/other-payment-methods
-   */
-  public function paymentHandler($payment_type, $amount, $notification_url = null, $url_callback = null)
-  {
-    $payment = $this->payment();
-    $payment->payment_method_id = $payment_type;
-    $payment->transaction_amount = $amount;
-    $payment->notification_url = $notification_url;
-    $payment->callback_url = $url_callback ?? $this->getCallbackUrl();
-    return $payment;
-  }
-
-  /**
    * Inicializa el sdk de mercado pago
    * @link https://github.com/mercadopago/sdk-php
    */
@@ -587,32 +349,6 @@ class MercadoPago  extends MercadoPagoConfig
   }
 
 
-  /**
-   * crear usuarios para hacer test
-   * @link https://www.mercadopago.com.co/developers/es/reference/test_user/_users_test_user/post
-   * @param string $site_id id del sitio donde se creará el usuario de prueba.
-   */
-  public function createTestUser($site_id = 'MCO')
-  {
-    $response = SDK::post('/users/test_user', $this->bodyHttp(
-      [
-        'site_id' => $site_id
-      ]
-    ));
-
-    return $response;
-  }
-
-  /**
-   * Convierte un array a json
-   * @param array $data
-   * @return string
-   */
-  private function json($data)
-  {
-
-    return json_encode($data);
-  }
 
   /**
    * Returna la url de authorización de cuenta mercado pago
@@ -628,15 +364,5 @@ class MercadoPago  extends MercadoPagoConfig
     );
   }
 
-  /**
-   * body para las peticiones del sdk mecado pago
-   * @param array $data
-   * @return string
-   */
-  private function bodyHttp($data)
-  {
-    return [
-      'json_data' => $this->json($data)
-    ];
-  }
+ 
 }

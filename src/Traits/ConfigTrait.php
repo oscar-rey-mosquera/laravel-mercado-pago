@@ -1,7 +1,8 @@
 <?php
-namespace OscarRey\MercadoPago;
+namespace OscarRey\MercadoPago\Traits;
 
-class MercadoPagoConfig  
+
+trait ConfigTrait  
 {
 
     public $api_version = '/v1';

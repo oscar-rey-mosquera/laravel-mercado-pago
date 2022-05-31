@@ -7,6 +7,7 @@ use MercadoPago\RecuperableError;
 use OscarRey\MercadoPago\Generic\SearchResultsArray;
 
 trait EntityTrait {
+  use ConfigTrait;
 
     public function process_error_body($message){
         $recuperable_error = new RecuperableError(
@@ -97,7 +98,7 @@ trait EntityTrait {
    * @param int $id
    * @return Entity|null
    */
-  public function customDelete($id)
+  public function deleteV2($id)
   {
     $response = $this->findById($id);
 
@@ -108,6 +109,33 @@ trait EntityTrait {
 
     return $response;
   }
+
+
+    /**
+   * Convierte un array a json
+   * @param array $data
+   * @return string
+   */
+  protected function json($data)
+  {
+
+    return json_encode($data);
+  }
+
+
+   /**
+   * body para las peticiones del sdk mecado pago
+   * @param array $data
+   * @return string
+   */
+  protected function bodyHttp($data)
+  {
+    return [
+      'json_data' => $this->json($data)
+    ];
+  }
+
+ 
 
     
 }

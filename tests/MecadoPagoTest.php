@@ -119,12 +119,9 @@ class MecadoPagoTest extends TestCase
        /** @test */
        public function consultar_usuarios() {
            
-         $customer =  MercadoPago()->createCustomerEmail('test@test.es');
+         $customer =  MercadoPago()->customer()->createWithEmail('rios@test.es');
 
          $this->assertNotNull($customer->id);
-
-         
-         dd(MercadoPago()->store()->customDelete(1131625646));
          
        }
  
