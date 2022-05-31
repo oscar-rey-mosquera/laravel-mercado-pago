@@ -46,6 +46,33 @@ MercadoPago::hello();
 (new MercadoPago())->hello();
 
 ```
+### Integra Checkout API para pagos con tarjetas
+
+La integración del Checkout API de Mercado Pago para tarjetas permite que puedas ofrecer una opción de pagos completa dentro de tu sitio [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/receiving-payment-by-card).
+```php
+
+ /**
+   * Instancia de Payment
+   * @link https://www.mercadopago.com.co/developers/es/reference/payments/_payments/post
+   */
+ $payment = MercadoPago()->payment();
+ 
+$payment->transaction_amount = (float)$_POST['transactionAmount'];
+$payment->token = $_POST['token'];
+$payment->description = $_POST['description'];
+$payment->installments = (int)$_POST['installments'];
+$payment->payment_method_id = $_POST['paymentMethodId'];
+$payment->issuer_id = (int)$_POST['issuer'];
+
+$payment->payer = array(
+    "email" => "test_user_19549678@testuser.com"
+  );
+
+ $payment->save();
+ 
+ //En la instacia se guarda la respuesta de la api de mercado pago
+ dd($payment);
+ ```
 
 ## Contribución
 
