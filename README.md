@@ -47,7 +47,7 @@ MercadoPago::hello();
 
 ```
 
-### Obtener medios de pago disponibles.
+### Obtener medios de pago disponibles y tipos de documentos.
 
 Consulta todos los medios de pago disponibles y obtén un listado con el detalle de cada uno y sus propiedades [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/payment_methods/_payment_methods/get).. 
 ```php
@@ -59,6 +59,15 @@ Consulta todos los medios de pago disponibles y obtén un listado con el detalle
 
     // Consultar medios de pago disponibles
     MercadoPago()->paymentMethod()->find();
+
+    /**
+   * Instancia de IdentificationType
+   * @link https://www.mercadopago.com.co/developers/es/reference/identification_types/_identification_types/get
+   */
+    MercadoPago()->identificationType();
+
+    // Consultar tipos de documentos disponibles
+    MercadoPago()->identificationType()->find();
     
    
 ```
@@ -89,6 +98,53 @@ $payment->payer = array(
  
  //En la instacia se guarda la respuesta de la api de mercado pago
  dd($payment);
+ ```
+
+ ### Integra otros medios de pago
+
+Con el Checkout API de Mercado Pago puedes sumar otras alternativas de medios de pago para ofrecer a tus clientes a la hora de realizar el pago [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/other-payment-methods).
+```php
+
+ /**
+   * Instancia de Payment con opción efecty
+   * @link https://www.mercadopago.com.co/developers/es/reference/payments/_payments/post
+   * 
+   * efecty($amount, $notification_url = null,  $url_callback = null)
+   */
+ $efecty = MercadoPago()->efecty(5000);
+ $efecty->description = "Título del producto";
+ $efecty->payer = array(
+    "email" => "test_user_19549678@testuser.com"
+  );
+
+ $efecty->save();
+
+ dd($efecty); //resultado
+
+ /**
+   * Instancia de Payment con opción pse
+   * @link https://www.mercadopago.com.co/developers/es/reference/payments/_payments/post
+   * 
+   * pse($amount, $notification_url = null, $url_callback = null)
+   */
+  $pse = MercadoPago()->pse(5000);
+  //etc..
+ 
+ ```
+
+  ### Cómo probar tu integración
+
+Te explicamos cómo utilizar nuestras tarjetas y usuarios de prueba para verificar que tus pagos sean creados correctamente y que los mensajes que quieras comunicar sean efectivos [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-api/integration-test/test-your-integration).
+```php
+
+ /**
+   * Crear usuario de prueba para hacer test
+   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/integration-test/test-user-create
+   * 
+   * createTestUser($site_id = 'MCO')
+   */
+ $testUser = MercadoPago()->createTestUser();
+ 
  ```
 
 ## Contribución
