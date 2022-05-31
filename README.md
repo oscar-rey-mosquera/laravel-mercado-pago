@@ -18,7 +18,7 @@ Para instalar utiliza composer.
 ```.bash
 composer require oscar-rey/laravel-mercado-pago
 ```
-## Configuración 
+## 🔧 Configuración 
 
 Una vez haya hecho la instalación puede agregar la variable de entorno MERCADO_PAGO_ACCESS_TOKEN en el archivo .env de tu proyecto de laravel  con el valor de tu access token que encontraras en tu [cuenta de desarrollador de mercado pago](https://www.mercadopago.com.co/developers/panel).
 ```bash
@@ -72,6 +72,21 @@ Consulta todos los medios de pago disponibles y obtén un listado con el detalle
    
 ```
 
+  ### ¿Cómo hacer pruebas en modo desarrollo?
+
+Para hacer pruebas con el sdk de mercado pago necesitas crear usuarios de prueba que van a simular roles como vendedores(cuenta de mercado pago con access_token)  o compradores(Un usuario natural que puede o no tener una cuenta de mercado pago normal).[referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-api/integration-test/test-your-integration).
+```php
+
+ /**
+   * Crear usuario de prueba para hacer test
+   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/integration-test/test-user-create
+   * 
+   * createTestUser($site_id = 'MCO')
+   */
+ $testUser = MercadoPago()->createTestUser();
+ 
+ ```
+
 ### Integra Checkout API para pagos con tarjetas
 
 La integración del Checkout API de Mercado Pago para tarjetas permite que puedas ofrecer una opción de pagos completa dentro de tu sitio [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/receiving-payment-by-card).
@@ -111,7 +126,7 @@ Con el Checkout API de Mercado Pago puedes sumar otras alternativas de medios de
    * 
    * efecty($amount, $notification_url = null,  $url_callback = null)
    */
- $efecty = MercadoPago()->efecty(5000);
+ $efecty = MercadoPago()->payment()->efecty(5000);
  $efecty->description = "Título del producto";
  $efecty->payer = array(
     "email" => "test_user_19549678@testuser.com"
@@ -127,25 +142,89 @@ Con el Checkout API de Mercado Pago puedes sumar otras alternativas de medios de
    * 
    * pse($amount, $notification_url = null, $url_callback = null)
    */
-  $pse = MercadoPago()->pse(5000);
+  $pse = MercadoPago()->payment()->pse(5000);
   //etc..
  
  ```
 
-  ### Cómo probar tu integración
+  ### Recuerda tus clientes y sus tarjetas
 
-Te explicamos cómo utilizar nuestras tarjetas y usuarios de prueba para verificar que tus pagos sean creados correctamente y que los mensajes que quieras comunicar sean efectivos [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-api/integration-test/test-your-integration).
+Usa nuestras APIs para guardar la referencia de las tarjetas de tus clientes y poder brindarles una mejor experiencia. De esta manera, tus clientes no tienen que completar sus datos cada vez y pueden finalizar sus pagos más rápido. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-api/advanced-integration/remember-customers-and-cards#editor_1).
 ```php
+ /**
+   * Instancia de Customer
+   * @link https://www.mercadopago.com.co/developers/es/reference/customers/_customers/post
+   * 
+   */
+  $customer = MercadoPago()->customer();
+  $customer->email = "test_payer_12345@testuser.com";
+  $customer->save();
+
+  dd($customer) //resultado
+
+   /**
+   * forma corta de crear un cliente con solo el email
+   * createWithEmail($email)
+   */
+  $customer = MercadoPago()->customer()->createWithEmail("test_payer_12345@testuser.com");
+
+  /**
+   * Buscar un cliente ya existente
+   * @link https://www.mercadopago.com.co/developers/es/reference/customers/_customers_id/get
+   */
+  $customer = MercadoPago()->customer()->findById($customer_id);
+
+    /**
+   * Actualizar cliente
+   * @link https://www.mercadopago.com.co/developers/es/reference/customers/_customers_id/put
+   */
+  $customer = MercadoPago()->customer()->findById($customer_id);
+  $customer->phone = '3215648956';
+  $customer->update();
+  dd($customer) // resultado
+  
+  /**
+   * Consultar lista de clientes
+   * @link https://www.mercadopago.com.co/developers/es/reference/customers/_customers_search/get
+   * find(array $filter)
+   */
+  $customer = MercadoPago()->customer()->find();
 
  /**
-   * Crear usuario de prueba para hacer test
-   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/integration-test/test-user-create
+   * Instancia de card
+   * @link https://www.mercadopago.com.co/developers/es/reference/cards/_customers_customer_id_cards/post
    * 
-   * createTestUser($site_id = 'MCO')
    */
- $testUser = MercadoPago()->createTestUser();
+  $card = MercadoPago()->card();
+ $card->token = "9b2d63e00d66a8c721607214cedaecda"; // token generado del lado del cliente en la intención de pago
+  $card->customer_id = $customer->id(); // cliente creado anteriormente
+  $card->issuer = array("id" => "3245612");
+  $card->payment_method = array("id" => "debit_card");
+  $card->save();
+
+  dd($card) //resultado
+
+  /**
+   * Consultar tarjeta creada
+   * @link https://www.mercadopago.com.co/developers/es/reference/cards/_customers_customer_id_cards_id/get
+   * 
+   */
+  $customer = MercadoPago()->card()->findById($customer_id, $id);
+  
+
+    /**
+   * Eliminar tarjeta
+   * @link https://www.mercadopago.com.co/developers/es/reference/cards/_customers_customer_id_cards_id/delete
+   * 
+   */
+  $customer = MercadoPago()->card()->deleteV2($customer_id, $id);
+
+/** Nota : para actualizar busca la tarjeta con el método findById($customer_id, $id) modifica y luego ejecuta el método update() con la instancia activa y listo.
+ * @link https://www.mercadopago.com.co/developers/es/reference/cards/_customers_customer_id_cards_id/put
+ */
  
  ```
+
 
 ## Contribución
 

@@ -4,8 +4,6 @@ namespace OscarRey\MercadoPago\Traits;
 
 trait ConfigTrait  
 {
-
-    public $api_version = '/v1';
  
     /**
      * Retorna token de la configuración

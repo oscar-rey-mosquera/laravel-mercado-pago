@@ -12,7 +12,7 @@ use MercadoPago\{
   InstoreOrder
 };
 
-use OscarRey\MercadoPago\Traits\ConfigTrait;
+use OscarRey\MercadoPago\Traits\EntityTrait;
 
 use OscarRey\MercadoPago\Entity\{
   Preapproval,
@@ -35,7 +35,7 @@ use OscarRey\MercadoPago\Entity\{
 class MercadoPago
 {
 
-   use ConfigTrait; 
+   use EntityTrait; 
 
   public function __construct()
   {
@@ -364,5 +364,20 @@ class MercadoPago
     );
   }
 
+        /**
+   * crear usuarios para hacer test
+   * @link https://www.mercadopago.com.co/developers/es/reference/test_user/_users_test_user/post
+   * @param string $site_id id del sitio donde se creará el usuario de prueba.
+   */
+  public function createTestUser($site_id = 'MCO')
+  {
+    $response = SDK::post('/users/test_user', $this->bodyHttp(
+      [
+        'site_id' => $site_id
+      ]
+    ));
+
+    return $response;
+  }
  
 }
