@@ -116,4 +116,14 @@ class PaymentMethod extends Entity
      * @var array
      */
     protected $processing_modes;
+
+    /**
+     * Consultar los medios de pago disponibles 
+     * @link https://www.mercadopago.com.co/developers/es/reference/payment_methods/_payment_methods/get
+     * @return array
+     */
+    public function find()
+    {
+        return static::all();
+    }
 }

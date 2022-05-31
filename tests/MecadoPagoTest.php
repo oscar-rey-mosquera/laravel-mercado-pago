@@ -25,7 +25,7 @@ class MecadoPagoTest extends TestCase
       /**
        * consultar medios de pago
        */
-      $this->assertArrayHasKey(1, MercadoPago()->findPaymentMethod());
+      $this->assertArrayHasKey(1, MercadoPago()->paymentMethod()->find());
 
 
       /** crear por efecry */
@@ -123,6 +123,8 @@ class MecadoPagoTest extends TestCase
 
          $this->assertNotNull($customer->id);
 
+         
+         dd(MercadoPago()->store()->customDelete(1131625646));
          
        }
  

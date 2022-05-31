@@ -56,6 +56,9 @@ Consulta todos los medios de pago disponibles y obtén un listado con el detalle
    * @link https://github.com/oscar-rey-mosquera/laravel-mercado-pago/blob/main/src/Entity/PaymentMethod.php
    */
     MercadoPago()->paymentMethod();
+
+    // Consultar medios de pago disponibles
+    MercadoPago()->paymentMethod()->find();
     
    
 ```

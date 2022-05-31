@@ -68,7 +68,7 @@ class MercadoPago  extends MercadoPagoConfig
     return new Store();
   }
 
-    /**
+  /**
    * Instancia de  AuthorizedPayment
    * @return  AuthorizedPayment
    */
@@ -253,110 +253,6 @@ class MercadoPago  extends MercadoPagoConfig
     return SDK::getCountryId();
   }
 
-  /**
-   * Obtiene toda la información de una factura a partir de su ID. Las facturas se programan automáticamente y se cobran en función de la recurrencia definida en la suscripción.
-   * @param int $id
-   * @return AuthorizedPayment|null
-   * @link https://www.mercadopago.com.co/developers/es/reference/subscriptions/_authorized_payments_id/get
-   */
-  public function  authorizedPaymentFindById($id)
-  {
-    $authorizedPayment = $this->FindByIdHandler($this->authorizedPayment(), $id);
-
-    return $authorizedPayment;
-  }
-
-    /**
-   * Busca las facturas de una suscripción mediante diferentes parámetros. Puedes buscar por suscripción, pago o Customer ID.
-   * @param array $filter filtros de sucursales
-   * @return SearchResultsArray
-   * @link https://www.mercadopago.com.co/developers/es/reference/subscriptions/_authorized_payments_search/get
-   */
-  public function findAuthorizedPayment($filter = [])
-  {
-    $authorizedPayment = $this->searchHandler($this->authorizedPayment(), $filter);
-
-    return $authorizedPayment;
-  }
-
-
-  /**
-   * Consulta toda la información de una tienda física con el ID de la sucursal que quieras.
-   * @param int $id
-   * @return Store|null
-   * @link https://www.mercadopago.com.co/developers/es/reference/stores/_stores_id/get
-   */
-  public function storeFindById($id)
-  {
-    $store = $this->FindByIdHandler($this->store(), $id);
-
-    return $store;
-  }
-
-  
-  /**
-   * Elimina una tienda física siempre que lo necesites con el ID de la sucursal.
-   * @param int $id
-   * @return Store|null
-   * @link https://www.mercadopago.com.co/developers/es/reference/stores/_users_user_id_stores_id/delete
-   */
-  public function deleteStore($id)
-  {
-    $store = $this->storeFindById($id);
-
-    if ($store) {
-
-      $store->delete();
-    }
-
-    return $store;
-  }
-
-  /**
-   * Encuentra toda la información de las sucursales generadas a través de filtros específicos.
-   * @param array $filter filtros de sucursales
-   * @param string $user_id encuentre el id del usuario en su panel de desarrollador en nuestro sitio para desarrolladores mercado pago
-   * @return SearchResultsArray
-   * @link https://www.mercadopago.com.co/developers/es/reference/stores/_users_user_id_stores_search/get
-   */
-  public function findStore($user_id, $filter = [])
-  {
-    $store = $this->searchHandler($this->store(), array_merge([
-      ['user_id' => $user_id],
-      $filter
-    ]));
-
-    return $store;
-  }
-
-
-  /**
-   * Buscar una órden presencial por user_id y external_pos_id
-   * @param string $user_id encuentre el id del usuario en su panel de desarrollador en nuestro sitio para desarrolladores mercado pago
-   * * @param string $external_pos_id
-   * @return InstoreOrder|null
-   * @link https://www.mercadopago.com.co/developers/es/reference/instore_orders_v2/_instore_qr_seller_collectors_user_id_pos_external_pos_id_orders/get
-   */
-  public function findInstoreOrder($user_id, $external_pos_id)
-  {
-    $order = get_class($this->instoreOrderV2());
-
-    return $order::get("/instore/qr/seller/collectors/{$user_id}/pos/{$external_pos_id}/orders");
-  }
-
-
-  /**
-   * Buscar tarjeta de cerdito por el id del cliente
-   * @param string $customer_id
-   * @return Card|null
-   * @link https://www.mercadopago.com.co/developers/es/reference/cards/_customers_customer_id_cards/get
-   */
-  public function cardFindById($customer_id)
-  {
-    $card = $this->FindByIdHandler($this->card(), $customer_id);
-
-    return $card;
-  }
 
   /**
    * Eliminar targeta de credito
@@ -366,7 +262,7 @@ class MercadoPago  extends MercadoPagoConfig
    */
   public function deleteCard($card_id, $customer_id)
   {
-    $card = $this->cardFindById($customer_id);
+    $card = $this->card()->findById($customer_id);
 
     if ($card) {
       $card->customer_id = $customer_id;
@@ -377,7 +273,6 @@ class MercadoPago  extends MercadoPagoConfig
 
     return $card;
   }
-
 
   /**
    * Crear cliente con solo el email
@@ -414,32 +309,6 @@ class MercadoPago  extends MercadoPagoConfig
     return $customer;
   }
 
-
-  /**
-   * Consultar órdenes comerciales
-   * @param array $filter filtros de ordenes comerciales
-   * @return SearchResultsArray
-   * @link https://www.mercadopago.com.co/developers/es/reference/merchant_orders/_merchant_orders_search/get
-   */
-  public function findMerchantOrder($filter = [])
-  {
-    $merchantOrder = $this->searchHandler($this->merchantOrder(), $filter);
-
-    return $merchantOrder;
-  }
-
-  /**
-   * Buscar órden comercial por id
-   * @param int $id
-   * @return MerchantOrder|null
-   * @link https://www.mercadopago.com.co/developers/es/reference/merchant_orders/_merchant_orders_id/get
-   */
-  public function merchantOrderFindById($id)
-  {
-    $merchantOrder = $this->FindByIdHandler($this->merchantOrder(), $id);
-
-    return $merchantOrder;
-  }
 
   /**
    * Consultar cajas 
@@ -593,63 +462,6 @@ class MercadoPago  extends MercadoPagoConfig
   }
 
   /**
-   * Consultar planes
-   * @param array $filter filtros de planes
-   * @return SearchResultsArray
-   * @link https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan_search/get
-   */
-  public function findPlan($filter = [])
-  {
-    $plan = $this->searchHandler($this->plan(), $filter);
-
-    return $plan;
-  }
-
-
-
-  /**
-   * Obtener tipos de documentos
-   * @return array
-   * @link https://www.mercadopago.com.co/developers/es/reference/identification_types/_identification_types/get
-   */
-  public function findIdentificationType()
-  {
-    $identificationType = get_class($this->identificationType());
-
-    return $identificationType::all();
-  }
-
-  /**
-   * Consultar plan por el id
-   * @param string $id
-   * @return Plan
-   * @link https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan_id/get
-   */
-  public function planFindById($id)
-  {
-    $plan = $this->findByIdHandler($this->plan(), $id);
-
-    return $plan;
-  }
-
-  /**
-   * Cancelar un plan
-   * @param string $id
-   * @return Plan
-   * @link https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan_id/put
-   */
-  public function cancelPlan($id)
-  {
-    $plan = $this->planFindById($id);
-
-    $plan->status = 'cancelled';
-
-    $plan->update();
-
-    return  $plan;
-  }
-
-  /**
    * Consultar reembolso de un pago por el payment_id
    * @param string $payment_id
    * @return Refund|null
@@ -661,35 +473,6 @@ class MercadoPago  extends MercadoPagoConfig
 
     return $refund;
   }
-
-
-  /**
-   * Consultar suscripciones
-   * @param array $filter filtros de suscripción
-   * @return SearchResultsArray
-   * @link https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_search/get
-   */
-  public function findPreapproval($filter = [])
-  {
-    $preapproval = $this->searchHandler($this->preapproval(), $filter);
-
-    return $preapproval;
-  }
-
-
-  /**
-   * Consultar suscripción por el id
-   * @param string $id
-   * @return Preapproval|null
-   * @link https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_id/get
-   */
-  public function preapprovalFindBydId($id)
-  {
-    $preapproval = $this->findByIdHandler($this->preapproval(), $id);
-
-    return $preapproval;
-  }
-
 
   /**
    * find by id
@@ -721,7 +504,7 @@ class MercadoPago  extends MercadoPagoConfig
 
 
   /**
-   * Consultar pagos
+   * Consultar con filtro
    * @param Entity $class
    * @param array $filter filtros para los recursos
    * @return SearchResultsArray
@@ -819,19 +602,6 @@ class MercadoPago  extends MercadoPagoConfig
 
     return $response;
   }
-
-  /**
-   * Consultar los medios de pago disponibles 
-   * @link https://www.mercadopago.com.co/developers/es/reference/payment_methods/_payment_methods/get
-   * @return array
-   */
-  public function findPaymentMethod()
-  {
-    $response = get_class($this->paymentMethod());
-
-    return $response::all();
-  }
-
 
   /**
    * Convierte un array a json

@@ -50,4 +50,15 @@ class IdentificationType extends Entity
      * @var int
      */
     protected $max_length;
+
+
+  /**
+   * Obtener tipos de documentos
+   * @return array
+   * @link https://www.mercadopago.com.co/developers/es/reference/identification_types/_identification_types/get
+   */
+  public function find()
+  {
+    return static::all();
+  }
 }

@@ -91,4 +91,17 @@ class InstoreOrderV2 extends Entity
      * @var string
      */
     protected $external_pos_id;
+
+
+      /**
+   * Buscar una órden presencial por user_id y external_pos_id
+   * @param string $user_id encuentre el id del usuario en su panel de desarrollador en nuestro sitio para desarrolladores mercado pago
+   * * @param string $external_pos_id
+   * @return InstoreOrder|null
+   * @link https://www.mercadopago.com.co/developers/es/reference/instore_orders_v2/_instore_qr_seller_collectors_user_id_pos_external_pos_id_orders/get
+   */
+  public function find($user_id, $external_pos_id)
+  {
+    return static::get("/instore/qr/seller/collectors/{$user_id}/pos/{$external_pos_id}/orders");
+  }
 }

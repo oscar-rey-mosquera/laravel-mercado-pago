@@ -2,6 +2,7 @@
 namespace OscarRey\MercadoPago\Traits;
 
 use Exception;
+use MercadoPago\Entity;
 use MercadoPago\RecuperableError;
 use OscarRey\MercadoPago\Generic\SearchResultsArray;
 
@@ -45,6 +46,68 @@ trait EntityTrait {
         }
         return $searchResult;
     }
+
+  /**
+   * find by id
+   * @param string $id
+   * @return Entity|null
+   */
+  public function findById($id)
+  {
+    $response = static::find_by_id($id);
+
+    return $response;
+  }
+
+    /**
+   * Consultar con filtro
+   * @param array $filter filtros para los recursos
+   * @return SearchResultsArray
+   */
+  public function find($filter = [])
+  {
+    $response = static::search($filter);
+
+    return $response;
+  }
+
+
+  /**
+   * Cancelar
+   * @param string $id
+   * @return Entity|null
+   */
+  public function cancelled($id)
+  {
+    $response = $this->findById($id);
+
+    if($response) {
+
+    $response->status = 'cancelled';
+
+    $response->update();
+    }
+
+    return $response;
+  }
+
+
+    /**
+   * Eliminar recurso.
+   * @param int $id
+   * @return Entity|null
+   */
+  public function customDelete($id)
+  {
+    $response = $this->findById($id);
+
+    if ($response) {
+
+      $response->delete();
+    }
+
+    return $response;
+  }
 
     
 }

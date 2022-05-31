@@ -54,4 +54,21 @@ class Store extends Entity
      * @var object
      */
     protected $location;
+
+     /**
+   * Encuentra toda la información de las sucursales generadas a través de filtros específicos.
+   * @param array $filter filtros de sucursales
+   * @param string $user_id encuentre el id del usuario en su panel de desarrollador en nuestro sitio para desarrolladores mercado pago
+   * @return SearchResultsArray
+   * @link https://www.mercadopago.com.co/developers/es/reference/stores/_users_user_id_stores_search/get
+   */
+  public function find($user_id, $filter = [])
+  {
+    $store = static::search(array_merge([
+        ['user_id' => $user_id],
+        $filter
+    ]));
+
+    return $store;
+  }
 }
