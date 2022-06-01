@@ -211,7 +211,7 @@ Usa nuestras APIs para guardar la referencia de las tarjetas de tus clientes y p
    * 
    */
   $card = MercadoPago()->card();
- $card->token = "9b2d63e00d66a8c721607214cedaecda"; // token generado del lado del cliente en la intención de pago
+  $card->token = "9b2d63e00d66a8c721607214cedaecda"; // token generado del lado del cliente en la intención de pago
   $card->customer_id = $customer->id(); // cliente creado anteriormente
   $card->issuer = array("id" => "3245612");
   $card->payment_method = array("id" => "debit_card");
@@ -255,6 +255,26 @@ Cancelaciones ocurren cuando se realiza una compra pero el pago aún no ha sido 
    *  refundV2($payment_id, $amount = 0)
    */
  $reembolso = MercadoPago()->payment()->refundV2($payment_id, $amount = 0);
+
+ dd($reembolso) // resultado
+
+ /**
+   * Obtener lista de reembolsos
+   * @link https://www.mercadopago.com.co/developers/es/reference/chargebacks/_payments_id_refunds/get
+   * 
+   *  find($payment_id)
+   */
+ $reembolso = MercadoPago()->refund()->find($payment_id);
+
+ dd($reembolso) // resultado
+
+  /**
+   * Obtener reembolso específico
+   * @link https://www.mercadopago.com.co/developers/es/reference/chargebacks/_payments_id_refunds_refund_id/get
+   * 
+   *  findById($payment_id, $refund_id)
+   */
+ $reembolso = MercadoPago()->refund()->findById($payment_id, $refund_id);
 
  dd($reembolso) // resultado
 
@@ -322,6 +342,137 @@ MercadoPago()->oauth()->oauthCredentials($authorization_code);
  * refreshOAuthCredentials($refresh_token)
  */
  MercadoPago()->oauth()->refreshOAuthCredentials($refresh_token);
+ ```
+
+### Crear orden
+Genera una orden para asociarla a la preferencia de pago y obtén la URL necesaria para iniciar el flujo de pago. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/merchant_orders/_merchant_orders/post).
+
+```php
+/**
+ * Instacia de MerchantOrder
+ * @link https://www.mercadopago.com.co/developers/es/reference/merchant_orders/_merchant_orders/post
+ */
+ $orden = MercadoPago()->merchantOrder();
+
+ /**
+  * Nota: Para crear una orden solo tienes que llenar los campos de la instancia y luego ejecutar save() metodo
+  */
+
+ /**
+ * Buscar en órdenes
+ * @link https://www.mercadopago.com.co/developers/es/reference/merchant_orders/_merchant_orders_search/get
+ * 
+ * find(array $filter);
+ */
+ $orden = MercadoPago()->merchantOrder()->find();
+
+  /**
+ * Obtener una orden
+ * @link https://www.mercadopago.com.co/developers/es/reference/merchant_orders/_merchant_orders_id/get
+ * 
+ */
+ $orden = MercadoPago()->merchantOrder()->findById($orden_id);
+
+  /**
+  * Nota: Para actualizar utiliza primero el método findById de la instancia
+merchantOrder reemplaza los campos a actualizar y luego ejecuta el método update() de la instancia
+  */
+
+ ```
+
+ ### Crear preferencia
+Genera una preferencia con la información de un producto o servicio y obtén la URL necesaria para iniciar el flujo de pago. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/preferences/_checkout_preferences/post).
+
+```php
+/**
+ * Instacia de Preference
+ * @link https://www.mercadopago.com.co/developers/es/reference/preferences/_checkout_preferences/post
+ */
+ $preference = MercadoPago()->preference();
+
+ /**
+  * Nota: Para crear una preferencia solo tienes que llenar los campos de la instancia y luego ejecutar save() metodo
+  */
+
+ /**
+ * Buscar en preferencias
+ * @link https://www.mercadopago.com.co/developers/es/reference/preferences/_checkout_preferences_search/get
+ * 
+ * find(array $filter);
+ */
+ $preferences = MercadoPago()->preference()->find();
+
+  /**
+ * Obtener una preferencia
+ * @link https://www.mercadopago.com.co/developers/es/reference/preferences/_checkout_preferences_id/get
+ * 
+ */
+ $preference = MercadoPago()->preference()->findById($preference_id);
+
+  /**
+  * Nota: Para actualizar utiliza primero el método findById de la instancia
+preference reemplaza los campos a actualizar y luego ejecuta el método update() de la instancia
+  */
+ ```
+
+ ### Crear caja
+Genera un punto de venta en una sucursal. Cada caja tendrá vinculado un código QR unívoco. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/pos/_pos/post).
+
+```php
+/**
+ * Instacia de POS
+ * @link https://www.mercadopago.com.co/developers/es/reference/pos/_pos/post
+ */
+ $caja = MercadoPago()->pos();
+
+/** 
+ * Nota: Para crear una caja solo tienes que llenar los campos de la instancia y luego ejecutar save() metodo
+*/
+
+ /**
+ * Buscar en cajas
+ * @link https://www.mercadopago.com.co/developers/es/reference/pos/_pos/get
+ * 
+ * find(array $filter);
+ */
+ $caja = MercadoPago()->pos()->find();
+
+  /**
+ * Obtener caja
+ * @link https://www.mercadopago.com.co/developers/es/reference/pos/_pos_id/gets/get
+ * 
+ */
+ $caja = MercadoPago()->pos()->findById($pos_id);
+
+ /**
+  * Nota: Para actualizar utiliza primero el método findById de la instancia
+preference reemplaza los campos a actualizar y luego ejecuta el método update() de la instancia
+  */
+
+/**
+ * Eliminar caja
+ * @link https://www.mercadopago.com.co/developers/es/reference/pos/_pos_id/delete
+ * 
+ */
+ $caja = MercadoPago()->pos()->deleteV2($pos_id);
+ 
+
+ ```
+
+ ### Crear orden 
+Genera una orden de pago asociada a la caja que quieras con toda la información de pago de tu producto o servicio. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/instore_orders/_mpmobile_instore_qr_user_id_external_id/post).
+
+```php
+/**
+ * Instacia de in store order
+ * @link https://www.mercadopago.com.co/developers/es/reference/instore_orders/_mpmobile_instore_qr_user_id_external_id/post
+ */
+ $instoreOrder = MercadoPago()->instoreOrder();
+
+ /** 
+ * Nota: Para crear una orden en la caja solo tienes que llenar los campos de la instancia y luego ejecutar save() metodo
+*/
+
  ```
 
 ## Contribución

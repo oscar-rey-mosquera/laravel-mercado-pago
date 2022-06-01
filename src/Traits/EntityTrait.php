@@ -11,6 +11,8 @@ trait EntityTrait
 {
   use ConfigTrait;
 
+  public $version = "/v1";
+
   public function process_error_body($message)
   {
     $recuperable_error = new RecuperableError(
@@ -71,6 +73,28 @@ trait EntityTrait
     } else {
       throw new Exception("Internal API Error");
     }
+  }
+
+
+    /**
+   * Adapta la repuesta de recursos unicos http
+   * @param array $response
+   */
+  public function findhandlerResponse($response, $filters = [])
+  {
+    $class = get_called_class();
+    $searchResult = new SearchResultsArray();
+    $searchResult->setEntityTypes($class);
+
+    if ($response['code'] == "200" || $response['code'] == "201") {
+      $searchResult->fetch($filters, $response['body']);
+    } elseif (intval($response['code']) >= 400 && intval($response['code']) < 500) {
+      $searchResult->process_error_body($response['body']);
+      throw new Exception($response['body']['message']);
+    } else {
+      throw new Exception("Internal API Error");
+    }
+    return $searchResult;
   }
 
   /**

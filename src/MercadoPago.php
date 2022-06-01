@@ -7,8 +7,6 @@ use MercadoPago\{
   Payer,
   Item,
   Chargeback,
-  Entity,
-  Refund,
   InstoreOrder
 };
 
@@ -29,7 +27,8 @@ use OscarRey\MercadoPago\Entity\{
   Payment,
   Customer,
   Preference,
-  POS
+  POS,
+  Refund
 };
 
 class MercadoPago
@@ -288,34 +287,6 @@ class MercadoPago
     $plan->back_url = $back_url ?? $this->getCallbackUrl();
 
     return $plan;
-  }
-
-  /**
-   * Consultar reembolso de un pago por el payment_id
-   * @param string $payment_id
-   * @return Refund|null
-   * @link https://www.mercadopago.com.co/developers/es/reference/chargebacks/_payments_id_refunds/get
-   */
-  public function refundFindBydId($payment_id)
-  {
-    $refund = $this->findByIdHandler($this->refund(), $payment_id);
-
-    return $refund;
-  }
-
-  /**
-   * find by id
-   * @param Entity $class
-   * @param string $id
-   * @return Entity
-   */
-  public function findByIdHandler(Entity $class, $id)
-  {
-    $response = get_class($class);
-
-    $response = $response::find_by_id($id);
-
-    return $response;
   }
 
   /**
