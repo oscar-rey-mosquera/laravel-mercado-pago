@@ -627,6 +627,7 @@ $plan = MercadoPago()->plan()->findById($plan_id);
   * Nota: Para actualizar utiliza primero el método findById de la instancia
 plan reemplaza los campos a actualizar y luego ejecuta el método update() de la instancia
   */
+  
  ```
 
 ## Contribución
