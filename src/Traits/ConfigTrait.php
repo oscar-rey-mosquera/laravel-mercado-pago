@@ -36,4 +36,12 @@ trait ConfigTrait
 
         return config('mercado-pago.redirect_uri');
     }
+
+    /**
+     * Retorna el user Id del usuario
+     */
+    public function getUserId() {
+
+        return config('mercado-pago.user_id');
+    }
 }

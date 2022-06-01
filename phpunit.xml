@@ -25,5 +25,6 @@
         <server name="APP_ENV" value="testing"/>
         <env name="MERCADO_PAGO_ACCESS_TOKEN" value="TEST-1437653101513658-052716-34bdbb16bb4b0a1fbb019c91a42dea83-1131625646" />
         <env name="MERCADO_PAGO_APP_ID" value="1437653101513658" />
+        <env name="MERCADO_PAGO_USER_ID" value="1131625646" />
     </php>
 </phpunit>

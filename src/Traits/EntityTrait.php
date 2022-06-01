@@ -11,8 +11,6 @@ trait EntityTrait
 {
   use ConfigTrait;
 
-  public $version = "/v1";
-
   public function process_error_body($message)
   {
     $recuperable_error = new RecuperableError(
@@ -69,7 +67,7 @@ trait EntityTrait
     } elseif (intval($response['code']) == 404) {
       return null;
     } elseif (intval($response['code']) >= 400 && intval($response['code']) < 500) {
-      throw new Exception($response['body']['message']);
+       return $response;
     } else {
       throw new Exception("Internal API Error");
     }

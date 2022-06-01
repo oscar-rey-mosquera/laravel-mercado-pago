@@ -16,6 +16,12 @@ return [
     */
    'app_id' => env('MERCADO_PAGO_APP_ID'),
 
+     /** 
+    * id de usuario en el panel
+    * https://www.mercadopago.com.co/developers/panel
+    */
+   'user_id' => env('MERCADO_PAGO_USER_ID'),
+
    /** 
     * Requerido para marketplace
     * URL donde será redirigido una vez un usuario haya dado permisos sobre su cuenta de mercado pago    */

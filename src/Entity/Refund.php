@@ -21,7 +21,7 @@ class Refund extends MercadoPagoRefund
    */
   public function find($payment_id)
   {
-    $refund = SDK::get("{$this->version}/payments/{$payment_id}/refunds");
+    $refund = SDK::get("/v1/payments/{$payment_id}/refunds");
 
     return $this->findhandlerResponse($refund);
   }
@@ -36,7 +36,7 @@ class Refund extends MercadoPagoRefund
    */
   public function findById($payment_id, $refund_id)
   {
-    $refund = SDK::get("{$this->version}/payments/{$payment_id}/refunds/{$refund_id}");
+    $refund = SDK::get("/v1/payments/{$payment_id}/refunds/{$refund_id}");
 
     return $this->findByIdhandlerResponse($refund);
   }

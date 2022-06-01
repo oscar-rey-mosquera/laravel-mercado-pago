@@ -7,5 +7,6 @@ use MercadoPago\Preapproval as MercadoPagoPreapproval;
 class Preapproval extends MercadoPagoPreapproval
 {
    use EntityTrait;
+   
   
 }

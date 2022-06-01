@@ -29,7 +29,7 @@ class MecadoPagoTest extends TestCase
 
 
       /** crear por efecry */
-      $payment = MercadoPago()->efecty(5000);
+      $payment = MercadoPago()->payment()->efecty(5000);
 
       $payment->description = "Título del producto";
       $payment->payer = ["email" => $this->getUserTest()[1]['email']];
@@ -41,7 +41,7 @@ class MecadoPagoTest extends TestCase
       $this->assertEquals('pending_waiting_payment', $payment->status_detail);
 
       /** buscar */
-      $find = MercadoPago()->paymentFindById($payment->id);
+      $find = MercadoPago()->payment()->findById($payment->id);
     
       $this->assertEquals($payment->id, $find->id);
   
@@ -51,14 +51,14 @@ class MecadoPagoTest extends TestCase
     /** @test */
     public function listar_pagos() {
 
-     $this->assertNotNull(MercadoPago()->findPayment()[0]->id);
+     $this->assertNotNull(MercadoPago()->payment()->find()[0]->id);
 
     }
 
       /** @test */
       public function crear_item_billetera() {
 
-        $preference = MercadoPago()->walletPurchase();
+        $preference = MercadoPago()->preference()->wallet();
 
         $item = MercadoPago()->item();
         $item->title = 'Mi producto';
@@ -93,11 +93,11 @@ class MecadoPagoTest extends TestCase
 
         $this->assertNotNull($suscripcion->id);
 
-        $findById = MercadoPago()->preapprovalFindBydId($suscripcion->id);
+        $findById = MercadoPago()->preapproval()->findById($suscripcion->id);
 
         $this->assertEquals($suscripcion->id, $findById->id);
 
-         $this->assertArrayHasKey(0, MercadoPago()->findPreapproval());
+         $this->assertArrayHasKey(0, MercadoPago()->preapproval()->find());
 
         //  $plan = MercadoPago()->createPlan('plan test');
           
@@ -122,9 +122,21 @@ class MecadoPagoTest extends TestCase
          $customer =  MercadoPago()->customer()->createWithEmail('rios@test.es');
 
          $this->assertNotNull($customer->id);
+          
 
-         dd(MercadoPago()->paymentMethod()->find());
+        //  dd(MercadoPago()->store()->create([
+        //    'name' => 'test store',
+        //    'location' => [
+        //      'city_name' => 'Quibdó',
+        //      'state_name' => 'Choco',
+        //      "latitude" => -32.8897322,
+        //      "longitude" => -68.8443275,
+        //      "street_name" => "Los rosales"
+        //    ]
+        //  ]));
+        
          
+         //47293910
        }
  
 }

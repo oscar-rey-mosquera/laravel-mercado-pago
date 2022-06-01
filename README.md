@@ -473,6 +473,160 @@ Genera una orden de pago asociada a la caja que quieras con toda la información
  * Nota: Para crear una orden en la caja solo tienes que llenar los campos de la instancia y luego ejecutar save() metodo
 */
 
+/**
+ * Obtener orden
+ * @link https://www.mercadopago.com.co/developers/es/reference/instore_orders_v2/_instore_qr_seller_collectors_user_id_pos_external_pos_id_orders/get
+ * 
+ * findById($user_id, $external_pos_id)
+ */
+ $instoreOrder = MercadoPago()->instoreOrderV2()->findById($user_id, $external_pos_id);
+
+ /**
+ * Eliminar orden
+ * @link https://www.mercadopago.com.co/developers/es/reference/instore_orders_v2/_instore_qr_seller_collectors_user_id_pos_external_pos_id_orders/delete
+ * 
+ * deleteV2($user_id, $external_pos_id)
+ */
+ $instoreOrder = MercadoPago()->instoreOrderV2()->deleteV2($user_id, $external_pos_id);
+
+ ```
+ ### Crear sucursal 
+Genera una tienda física en la que los clientes pueden adquirir los productos o servicios. Puedes crear más de una sucursal por cuenta.
+[referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/stores/_users_user_id_stores/post).
+
+```php
+/**
+ * Instacia de store
+ * @link https://www.mercadopago.com.co/developers/es/reference/stores/_users_user_id_stores/post
+ */
+ $instoreOrder = MercadoPago()->store();
+
+//create($data = [], $user_id = null)
+$instoreOrder = MercadoPago()->store()->create([
+'name' => 'test store',
+'location' => [
+'city_name' => 'Quibdó',
+'state_name' => 'Choco',
+'latitude' => -32.8897322,
+'longitude' => -68.8443275,
+'street_name' => "Los rosales"
+ ]
+]);
+
+//Buscar en sucursales
+// @url https://www.mercadopago.com.co/developers/es/reference/stores/_users_user_id_stores_search/get
+// find($filter = [], $user_id = null)
+$stores = MercadoPago()->store()->find();
+
+//Obtener sucursal
+// @url https://www.mercadopago.com.co/developers/es/reference/stores/_stores_id/get
+
+$stores = MercadoPago()->store()->findById($store_id);
+
+//Eliminar sucursal
+// @url https://www.mercadopago.com.co/developers/es/reference/stores/_stores_id/get
+// deleteV2($store_id, $user_id = null)
+$stores = MercadoPago()->store()->deleteV2($store_id);
+
+//Actualizar sucursal
+// @url https://www.mercadopago.com.co/developers/es/reference/stores/_stores_id/get
+// updateV2($store_id , $data = [], $user_id = null)
+$stores = MercadoPago()->store()->updateV2($store_id, 
+[
+'name' => 'test store',
+'location' => [
+'city_name' => 'Quibdó',
+'state_name' => 'Choco',
+'latitude' => -32.8897322,
+'longitude' => -68.8443275,
+'street_name' => "Los rosales"
+]
+]);
+
+ ```
+  ### Create a QR tramma
+Genera un tramma QR que se agregará a una imagen. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/qr-dynamic/_instore_orders_qr_seller_collectors_user_id_pos_external_pos_id_qrs/post).
+
+```php
+/**
+ * Instacia de InstoreOrderQr
+ * @link https://www.mercadopago.com.co/developers/es/reference/qr-dynamic/_instore_orders_qr_seller_collectors_user_id_pos_external_pos_id_qrs/post
+ */
+ $instoreOrderQr = MercadoPago()->instoreOrderQr();
+
+//create($external_pos_id, $data = [],$user_id = null)
+$instoreOrderQr = MercadoPago()->instoreOrderQr()->create(8787, [
+  "descripción" => "example descripción"
+]);
+
+ ```
+   ### Crear suscripción
+Una suscripción es la unión entre un plan y un cliente. La principal característica de este contrato es que tiene configurada una forma de pago y es la base para la creación de las facturas. También puedes crear una suscripción sin un plan. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval/post).
+
+```php
+/**
+ * Instacia de preapproval
+ * @link https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval/post
+ */
+ $preapproval = MercadoPago()->preapproval();
+
+//createPreapproval($reason, $back_url = null)
+$preapproval = MercadoPago()->createPreapproval('Premium');
+
+$preapproval->preapproval_plan_id = "2c938084726fca480172750000000000";
+
+$preapproval->save();
+
+dd($preapproval) /resultado
+
+
+//Buscar en suscripciones
+// @url https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_search/get
+//
+$preapproval = MercadoPago()->preapproval()->find();
+
+//Obtener suscripción
+// @url https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_id/get
+//
+$preapproval = MercadoPago()->preapproval()->findById($preapproval_id);
+
+  /**
+  * Nota: Para actualizar utiliza primero el método findById de la instancia
+preapproval reemplaza los campos a actualizar y luego ejecuta el método update() de la instancia
+  */
+ ```
+   ### Crear un plan de suscripción
+Un plan es un template para crear suscripciones que indican con qué frecuencia y cuánto cobrar a tus clientes. Se pueden crear planes con pruebas gratuitas, ciclos de facturación y más. Las suscripciones creadas a partir de un plan están relacionadas con el mismo y permiten sincronizar modificaciones como reason o amount. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan/post).
+
+```php
+/**
+ * Instacia de plan
+ * @link https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan/post
+ */
+ $plan = MercadoPago()->plan();
+
+//createPlan($description, $back_url = null)
+$plan = MercadoPago()->createPlan('Premium');
+
+$plan->save();
+
+dd($plan) /resultado
+
+
+//Buscar en planes de suscripción
+// @url https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan_search/get
+//
+$plan = MercadoPago()->plan()->find();
+
+//Obtener un plan de suscripción
+// @url https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan_id/get
+//
+$plan = MercadoPago()->plan()->findById($plan_id);
+
+  /**
+  * Nota: Para actualizar utiliza primero el método findById de la instancia
+plan reemplaza los campos a actualizar y luego ejecuta el método update() de la instancia
+  */
  ```
 
 ## Contribución

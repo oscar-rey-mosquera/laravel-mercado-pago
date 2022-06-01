@@ -2,6 +2,7 @@
 
 namespace OscarRey\MercadoPago\Entity;
 
+use MercadoPago\SDK;
 use MercadoPago\Entity;
 use MercadoPago\Annotation\Attribute;
 use MercadoPago\Annotation\RestMethod;
@@ -113,5 +114,25 @@ class InstoreOrderQr extends Entity
      * @var string
      */
     protected $qr_data;
+
+
+
+  /**
+   * Create a QR tramma
+   * @param array $data datos de la sucursal
+   * @param int $user_id encuentre el id del usuario en su panel de desarrollador en nuestro sitio para desarrolladores mercado pago
+   * @param string $external_pos_id 
+   * @return InstoreOrderQr
+   * @link https://www.mercadopago.com.co/developers/es/reference/qr-dynamic/_instore_orders_qr_seller_collectors_user_id_pos_external_pos_id_qrs/post
+   */
+  public function create($external_pos_id, $data = [],$user_id = null)
+  {
+    $user_id = $user_id ?? $this->getUserId();
+    $response = SDK::post("/instore/orders/qr/seller/collectors/{$user_id}/pos/{$external_pos_id}/qrs", $this->bodyHttp($data));
+
+    return $this->findByIdhandlerResponse($response);
+  }
+
+  
 
 }
