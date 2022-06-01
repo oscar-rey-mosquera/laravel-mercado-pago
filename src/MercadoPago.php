@@ -328,21 +328,6 @@ class MercadoPago
   }
 
 
-
-  /**
-   * Returna la url de authorización de cuenta mercado pago
-   * @param string|null $redirect_uri
-   * @return string
-   */
-  public function authorizationURL($redirect_uri = null, $random_id = null)
-  {
-    return $this->oauth()->customGetAuthorizationURL(
-      $this->getAppId(),
-      $random_id,
-      $redirect_uri ?? $this->getRedirectUri()
-    );
-  }
-
         /**
    * crear usuarios para hacer test
    * @link https://www.mercadopago.com.co/developers/es/reference/test_user/_users_test_user/post

@@ -144,10 +144,25 @@ Con el Checkout API de Mercado Pago puedes sumar otras alternativas de medios de
    */
   $pse = MercadoPago()->payment()->pse(5000);
   //etc..
+
+
+   /**
+   * Consultar lista de pagos
+   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/retrieving-payments
+   *
+   */
+  $pagos = MercadoPago()->payment()->find();
+
+  /**
+   * Buscar un pago
+   * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/retrieving-payments
+   *
+   */
+  $pagos = MercadoPago()->payment()->findById($id);
  
  ```
 
-  ### Recuerda tus clientes y sus tarjetas
+### Recuerda tus clientes y sus tarjetas
 
 Usa nuestras APIs para guardar la referencia de las tarjetas de tus clientes y poder brindarles una mejor experiencia. De esta manera, tus clientes no tienen que completar sus datos cada vez y pueden finalizar sus pagos más rápido. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-api/advanced-integration/remember-customers-and-cards#editor_1).
 ```php
@@ -239,7 +254,7 @@ Cancelaciones ocurren cuando se realiza una compra pero el pago aún no ha sido 
    * 
    *  refundV2($payment_id, $amount = 0)
    */
- $reembolso = MercadoPago()->payment()-> refundV2($payment_id, $amount = 0);
+ $reembolso = MercadoPago()->payment()->refundV2($payment_id, $amount = 0);
 
  dd($reembolso) // resultado
 
@@ -249,13 +264,13 @@ Cancelaciones ocurren cuando se realiza una compra pero el pago aún no ha sido 
    * 
    *  cancelled($payment_id)
    */
- $cancelled = MercadoPago()->payment()-> cancelled($payment_id);
+ $cancelled = MercadoPago()->payment()->cancelled($payment_id);
 
  dd($cancelled) // resultado
 
  ```
 
-  ### Cómo sumar la billetera en tu sitio
+### Cómo sumar la billetera en tu sitio
 
 Necesitas integrar Checkout Pro configurado como modo billetera para agregar la billetera de Mercado Pago en tu sitio.
 
@@ -263,8 +278,7 @@ Para integrarlo, tienes que generar la preferencia de pago con la información d
 
 ```php
 
-
- // Crea un objeto de preferencia
+// Crea un objeto de preferencia
 $preference = MercadoPago()->preference()->wallet();
 
 // Crea un ítem en la preferencia
@@ -282,6 +296,33 @@ dd($preference) // resultado
  */
  ```
 
+### Integración de un marketplace
+Marketplace es un sitio/plataforma de comercio electrónico que conecta a vendedores y compradores en un mismo entorno de ventas, permitiendo la venta de productos y/o servicios online con mayor alcance y posibilidad de conversión.
+[referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-pro/how-tos/integrate-marketplace).
+
+```php
+// paso 1 - genera la url y redirige al vendedor que quiera asocial su cuenta de mercado pago con tun aplicación.
+// @url https://www.mercadopago.com.co/developers/es/docs/checkout-pro/additional-content/security/oauth/creation
+
+// authorizationURL($random_id, $redirect_uri = null)
+MercadoPago()->oauth()->authorizationURL($random_id );
+
+
+ // paso 2 - Obten el authorization_code de la redirección de mercado pago para obtener las credenciales del vendedor.
+// @url https://www.mercadopago.com.co/developers/es/docs/checkout-pro/additional-content/security/oauth/renewal
+
+// oauthCredentials($authorization_code, $redirect_uri = null)
+MercadoPago()->oauth()->oauthCredentials($authorization_code);
+
+/**
+ * Renovación
+ * El flujo refresh_token se usa para intercambiar un temporal grant de tipo refresh_token por un access token cuando el token de acceso en uso ha caducado. El access token recibido a través del endpoint es válido durante 180 días, luego de lo cual se debe reconfigurar todo el flujo de autorización.
+ * @link https://www.mercadopago.com.co/developers/es/docs/checkout-pro/additional-content/security/oauth/renewal
+ * 
+ * refreshOAuthCredentials($refresh_token)
+ */
+ MercadoPago()->oauth()->refreshOAuthCredentials($refresh_token);
+ ```
 
 ## Contribución
 
