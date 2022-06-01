@@ -81,7 +81,7 @@ Para hacer pruebas con el sdk de mercado pago necesitas crear usuarios de prueba
    * Crear usuario de prueba para hacer test
    * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/integration-test/test-user-create
    * 
-   * createTestUser($site_id = 'MCO')
+   * createTestUser($site_id = 'MCO'): array
    */
  $testUser = MercadoPago()->createTestUser();
  
@@ -223,6 +223,63 @@ Usa nuestras APIs para guardar la referencia de las tarjetas de tus clientes y p
  * @link https://www.mercadopago.com.co/developers/es/reference/cards/_customers_customer_id_cards_id/put
  */
  
+ ```
+
+ ### Reembolsos y cancelaciones
+
+Reembolsos son transacciones que se realizan cuando un determinado cargo se revierte y las cantidades pagadas se devuelven al comprador. Esto significa que el cliente recibirá en su cuenta o en el extracto de su tarjeta de crédito el monto pagado por la compra de un determinado producto o servicio.
+
+Cancelaciones ocurren cuando se realiza una compra pero el pago aún no ha sido aprobado por algún motivo. En este caso, considerando que la transacción no fue procesada y el establecimiento no recibió ningún monto, la compra se cancela y no hay cargo. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/cancellations-and-refunds).
+
+```php
+
+ /**
+   * Hacer un reembolso de un pago
+   * @link https://www.mercadopago.com.co/developers/es/reference/chargebacks/_payments_id_refunds/post
+   * 
+   *  refundV2($payment_id, $amount = 0)
+   */
+ $reembolso = MercadoPago()->payment()-> refundV2($payment_id, $amount = 0);
+
+ dd($reembolso) // resultado
+
+  /**
+   * Cancelar una intención de pago
+   * @link https://www.mercadopago.com.co/developers/es/reference/chargebacks/_payments_payment_id/put
+   * 
+   *  cancelled($payment_id)
+   */
+ $cancelled = MercadoPago()->payment()-> cancelled($payment_id);
+
+ dd($cancelled) // resultado
+
+ ```
+
+  ### Cómo sumar la billetera en tu sitio
+
+Necesitas integrar Checkout Pro configurado como modo billetera para agregar la billetera de Mercado Pago en tu sitio.
+
+Para integrarlo, tienes que generar la preferencia de pago con la información del producto o servicio que quieras ofrecer y agregar la opción de pago en tu sitio. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-api/wallet-integration/wallet-addto-website).
+
+```php
+
+
+ // Crea un objeto de preferencia
+$preference = MercadoPago()->preference()->wallet();
+
+// Crea un ítem en la preferencia
+$item = MercadoPago()->item();
+$item->title = 'Mi producto';
+$item->quantity = 1;
+$item->unit_price = 75;
+$preference->items = array($item);
+$preference->save();
+
+dd($preference) // resultado
+
+/** Nota : Sigue los siguientes pasos en la documentación oficial del sdk.
+ * @link https://www.mercadopago.com.co/developers/es/docs/checkout-api/wallet-integration/wallet-addto-website
+ */
  ```
 
 

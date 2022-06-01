@@ -258,27 +258,6 @@ class MercadoPago
 
 
   /**
-   * Eliminar targeta de credito
-   * @param string $customer_id
-   * @return Card|null
-   * @link https://www.mercadopago.com.co/developers/es/reference/cards/_customers_customer_id_cards/get
-   */
-  public function deleteCard($card_id, $customer_id)
-  {
-    $card = $this->card()->findById($customer_id);
-
-    if ($card) {
-      $card->customer_id = $customer_id;
-      $card->id = $card_id;
-
-      $card->delete();
-    }
-
-    return $card;
-  }
-
-
-  /**
    *  Crear suscripción
    * @param string|null $back_url url de redirección despues del pago
    * @param string $reason descripción de la suscripción
@@ -330,7 +309,7 @@ class MercadoPago
    * @param string $id
    * @return Entity
    */
-  public function FindByIdHandler(Entity $class, $id)
+  public function findByIdHandler(Entity $class, $id)
   {
     $response = get_class($class);
 
