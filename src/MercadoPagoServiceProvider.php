@@ -15,6 +15,7 @@ class MercadoPagoServiceProvider extends ServiceProvider
 
   public function boot()
   {
+    $this->publish();
   }
 
 
@@ -38,6 +39,17 @@ class MercadoPagoServiceProvider extends ServiceProvider
   {
 
     $this->mergeConfigFrom($this->resolvePath('config/mercado-pago.php'), 'mercado-pago');
+  }
+
+
+  /**
+   * Publicar archivos
+   */
+  private function publish()
+  {
+    $this->publishes([
+      $this->resolvePath('config/mercado-pago.php') => config_path('mercado-pago.php'),
+    ], 'mercado-pago');
   }
 
 

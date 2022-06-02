@@ -6,6 +6,7 @@ use MercadoPago\Annotation\Attribute;
 use MercadoPago\Annotation\RestMethod;
 use MercadoPago\Annotation\RequestParam;
 use OscarRey\MercadoPago\Traits\EntityTrait;
+use OscarRey\MercadoPago\Interfaces\ClassToJson;
 use MercadoPago\MerchantOrder as MercadoPagoMerchantOrder;
 
 /**
@@ -18,7 +19,7 @@ use MercadoPago\MerchantOrder as MercadoPagoMerchantOrder;
  * @RestMethod(resource="/merchant_orders/search", method="search")
  */
 
-class MerchantOrder extends MercadoPagoMerchantOrder
+class MerchantOrder extends MercadoPagoMerchantOrder implements ClassToJson
 {
     use EntityTrait;
 }

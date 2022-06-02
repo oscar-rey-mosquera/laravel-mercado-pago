@@ -9,7 +9,7 @@ use OscarRey\MercadoPago\Generic\SearchResultsArray;
 
 trait EntityTrait
 {
-  use ConfigTrait;
+  use ConfigTrait, ToJsonTrait;
 
   public function process_error_body($message)
   {
@@ -24,6 +24,37 @@ trait EntityTrait
 
     $this->error = $recuperable_error;
   }
+
+  /**
+     * Fill entity from data with nested object creation
+     *
+     * @param $entity
+     * @param $data
+     */
+    protected function _fillFromArray($entity, $data)
+    { 
+      
+      if ($data) {
+        
+        foreach ($data as $key => $value) {
+            if (!is_null($value)){
+                if (is_array($value)) {
+                    $className = 'OscarRey\\MercadoPago\\Entity\\' . $this->_camelize($key);
+                    if (class_exists($className, true)) {
+                        $entity->_setValue($key, new $className, false);
+                        $entity->_fillFromArray($this->{$key}, $value);
+                    } else {
+                        $entity->_setValue($key, json_decode(json_encode($value)), false);
+                    }
+                    continue;
+                }
+                $entity->_setValue($key, $value, false);
+            }
+        }
+      }
+    }
+
+
 
   /**
    * @return mixed
@@ -158,16 +189,7 @@ trait EntityTrait
   }
 
 
-  /**
-   * Convierte un array a json
-   * @param array $data
-   * @return string
-   */
-  protected function json($data)
-  {
-
-    return json_encode($data);
-  }
+  
 
 
   /**

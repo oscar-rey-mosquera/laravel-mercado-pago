@@ -8,6 +8,7 @@ use MercadoPago\Annotation\Attribute;
 use MercadoPago\Annotation\RestMethod;
 use MercadoPago\Annotation\RequestParam;
 use OscarRey\MercadoPago\Traits\EntityTrait;
+use OscarRey\MercadoPago\Interfaces\ClassToJson;
 
 /**
  * @link https://www.mercadopago.com.co/developers/es/reference/qr-dynamic/_instore_orders_qr_seller_collectors_user_id_pos_external_pos_id_qrs/post Click here for more infos
@@ -16,7 +17,7 @@ use OscarRey\MercadoPago\Traits\EntityTrait;
  * @RestMethod(resource="/instore/orders/qr/seller/collectors/:user_id/pos/:external_pos_id/qrs", method="update")
  */
 
-class InstoreOrderQr extends Entity
+class InstoreOrderQr extends Entity implements ClassToJson
 {
     use EntityTrait;
 

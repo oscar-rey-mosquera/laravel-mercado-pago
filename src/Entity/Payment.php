@@ -2,11 +2,12 @@
 namespace OscarRey\MercadoPago\Entity;
 
 use MercadoPago\SDK;
-use MercadoPago\Payment as MercadoPagoPayment;
 use OscarRey\MercadoPago\Traits\EntityTrait;
+use MercadoPago\Payment as MercadoPagoPayment;
+use OscarRey\MercadoPago\Interfaces\ClassToJson;
 
 
-class Payment extends MercadoPagoPayment
+class Payment extends MercadoPagoPayment implements ClassToJson
 {
    use EntityTrait;
 

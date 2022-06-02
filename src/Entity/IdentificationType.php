@@ -6,12 +6,13 @@ use MercadoPago\Entity;
 use MercadoPago\Annotation\Attribute;
 use MercadoPago\Annotation\RestMethod;
 use OscarRey\MercadoPago\Traits\EntityTrait;
+use OscarRey\MercadoPago\Interfaces\ClassToJson;
 
 /**
  * identificationtype class
  * @RestMethod(resource="/v1/identification_types", method="list")
  */
-class IdentificationType extends Entity
+class IdentificationType extends Entity implements ClassToJson
 {
     use EntityTrait;
 

@@ -6,12 +6,13 @@ use MercadoPago\Entity;
 use MercadoPago\Annotation\Attribute;
 use MercadoPago\Annotation\RestMethod;
 use OscarRey\MercadoPago\Traits\EntityTrait;
+use OscarRey\MercadoPago\Interfaces\ClassToJson;
 
 /**
  * paymentmethod class
  * @RestMethod(resource="/v1/payment_methods", method="list")
  */
-class PaymentMethod extends Entity
+class PaymentMethod extends Entity implements ClassToJson
 {
     use EntityTrait;
 

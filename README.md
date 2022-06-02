@@ -20,10 +20,11 @@ composer require oscar-rey/laravel-mercado-pago
 ```
 ## 🔧 Configuración 
 
-Una vez haya hecho la instalación puede agregar la variable de entorno MERCADO_PAGO_ACCESS_TOKEN en el archivo .env de tu proyecto de laravel  con el valor de tu access token que encontraras en tu [cuenta de desarrollador de mercado pago](https://www.mercadopago.com.co/developers/panel).
+Una vez haya hecho la instalación puede agregar la variable de entorno MERCADO_PAGO_ACCESS_TOKEN y MERCADO_PAGO_USER_ID el  en el archivo .env de tu proyecto de laravel  con el valor de tu access token que encontraras en tu [cuenta de desarrollador de mercado pago](https://www.mercadopago.com.co/developers/panel).
 ```bash
 //.env
 MERCADO_PAGO_ACCESS_TOKEN=access_token
+MERCADO_PAGO_USER_ID=user_id
 ```
 ## Publica archivo de configuración 
 

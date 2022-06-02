@@ -5,9 +5,10 @@ namespace OscarRey\MercadoPago\Entity;
 use MercadoPago\SDK;
 use MercadoPago\OAuth as MercadoPagoOAuth;
 use OscarRey\MercadoPago\Traits\EntityTrait;
+use OscarRey\MercadoPago\Interfaces\ClassToJson;
 
 
-class OAuth extends MercadoPagoOAuth
+class OAuth extends MercadoPagoOAuth implements ClassToJson
 {
   use EntityTrait;
 

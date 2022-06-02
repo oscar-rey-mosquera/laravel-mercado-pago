@@ -2,12 +2,13 @@
 namespace OscarRey\MercadoPago\Entity;
 
 use MercadoPago\SDK;
+use MercadoPago\Entity;
 use MercadoPago\Annotation\Attribute;
 use MercadoPago\Annotation\RestMethod;
 use MercadoPago\Annotation\RequestParam;
 use MercadoPago\Card as MercadoPagoCard;
 use OscarRey\MercadoPago\Traits\EntityTrait;
-use MercadoPago\Entity;
+use OscarRey\MercadoPago\Interfaces\ClassToJson;
 
 /**
  * The cards class is the way to store card data of your customers safely to improve the shopping experience.
@@ -24,7 +25,7 @@ use MercadoPago\Entity;
  * @RestMethod(resource="/v1/customers/:customer_id/cards/:id", method="delete")
  */
 
-class Card extends MercadoPagoCard
+class Card extends MercadoPagoCard implements ClassToJson
 {
    use EntityTrait;
 

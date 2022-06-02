@@ -8,6 +8,7 @@ use MercadoPago\Annotation\Attribute;
 use MercadoPago\Annotation\RestMethod;
 use MercadoPago\Annotation\RequestParam;
 use OscarRey\MercadoPago\Traits\EntityTrait;
+use OscarRey\MercadoPago\Interfaces\ClassToJson;
 
 /**
  * store class
@@ -17,7 +18,7 @@ use OscarRey\MercadoPago\Traits\EntityTrait;
  * @RestMethod(resource="/users/:user_id/stores/:id", method="update")
  * @RestMethod(resource="/users/:user_id/stores/:id", method="delete")
  */
-class Store extends Entity
+class Store extends Entity implements ClassToJson
 {
     use EntityTrait;
 
@@ -36,11 +37,11 @@ class Store extends Entity
     protected $name;
 
     /**
-     * date_created
+     * date_creation
      * @Attribute()
      * @var string
      */
-    protected $date_created;
+    protected $date_creation;
 
     /**
      * business_hours

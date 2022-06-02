@@ -4,9 +4,10 @@ namespace OscarRey\MercadoPago\Entity;
 use MercadoPago\SDK;
 use MercadoPago\Refund as MercadoPagoRefund;
 use OscarRey\MercadoPago\Traits\EntityTrait;
+use OscarRey\MercadoPago\Interfaces\ClassToJson;
 
 
-class Refund extends MercadoPagoRefund
+class Refund extends MercadoPagoRefund implements ClassToJson
 {
    use EntityTrait;
 

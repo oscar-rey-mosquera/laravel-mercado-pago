@@ -4,9 +4,6 @@ namespace OscarRey\MercadoPago;
 
 use MercadoPago\{
   SDK,
-  Payer,
-  Item,
-  Chargeback,
   InstoreOrder
 };
 
@@ -28,7 +25,10 @@ use OscarRey\MercadoPago\Entity\{
   Customer,
   Preference,
   POS,
-  Refund
+  Refund,
+  Payer,
+  Item,
+  Chargeback
 };
 
 class MercadoPago

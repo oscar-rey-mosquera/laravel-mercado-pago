@@ -7,6 +7,7 @@ use MercadoPago\Annotation\Attribute;
 use MercadoPago\Annotation\RestMethod;
 use MercadoPago\Annotation\RequestParam;
 use OscarRey\MercadoPago\Traits\EntityTrait;
+use OscarRey\MercadoPago\Interfaces\ClassToJson;
 
 /**
  * plan class
@@ -15,7 +16,7 @@ use OscarRey\MercadoPago\Traits\EntityTrait;
  * @RestMethod(resource="/preapproval_plan/search", method="search")
  * @RestMethod(resource="/preapproval_plan/:id", method="update")
  */
-class Plan extends Entity
+class Plan extends Entity implements ClassToJson
 {
    use EntityTrait;
 

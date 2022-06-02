@@ -1,11 +1,12 @@
 <?php
 namespace OscarRey\MercadoPago\Entity;
 
-use MercadoPago\Preference as MercadoPagoPreference;
 use OscarRey\MercadoPago\Traits\EntityTrait;
+use OscarRey\MercadoPago\Interfaces\ClassToJson;
+use MercadoPago\Preference as MercadoPagoPreference;
 
 
-class Preference extends MercadoPagoPreference
+class Preference extends MercadoPagoPreference implements ClassToJson
 {
    use EntityTrait;
 

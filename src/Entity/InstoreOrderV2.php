@@ -9,6 +9,7 @@ use MercadoPago\Annotation\Attribute;
 use MercadoPago\Annotation\RestMethod;
 use MercadoPago\Annotation\RequestParam;
 use OscarRey\MercadoPago\Traits\EntityTrait;
+use OscarRey\MercadoPago\Interfaces\ClassToJson;
 use MercadoPago\InstoreOrder as MercadoPagoInstoreOrder;
 
 /**
@@ -19,7 +20,7 @@ use MercadoPago\InstoreOrder as MercadoPagoInstoreOrder;
  * @RestMethod(resource="/instore/qr/seller/collectors/:user_id/pos/:external_pos_id/orders", method="read")
  * @RestMethod(resource="/instore/qr/seller/collectors/:user_id/pos/:external_pos_id/orders", method="delete")
  */
-class InstoreOrderV2 extends Entity
+class InstoreOrderV2 extends Entity implements ClassToJson
 {
     use EntityTrait;
 
