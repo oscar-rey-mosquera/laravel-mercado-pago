@@ -26,6 +26,11 @@ Una vez haya hecho la instalación puede agregar la variable de entorno MERCADO
 MERCADO_PAGO_ACCESS_TOKEN=access_token
 MERCADO_PAGO_USER_ID=user_id
 ```
+o llama el metodo initSdk y como parametro le pasas tu access_token
+```php
+MercadoPago()->initSdk($access_token);
+```
+
 ## Publica archivo de configuración 
 
 Publica el archivo de configuración ejecutando php artisan vendor:publish y selecciona el número que tiene como tag mercado-pago.

@@ -293,9 +293,9 @@ class MercadoPago
    * Inicializa el sdk de mercado pago
    * @link https://github.com/mercadopago/sdk-php
    */
-  public function initSdk()
+  public function initSdk($access_token = null)
   {
-    SDK::setAccessToken($this->getAccesToken());
+    SDK::setAccessToken($access_token ?? $this->getAccesToken());
   }
 
 
