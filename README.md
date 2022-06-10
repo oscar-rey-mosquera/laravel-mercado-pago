@@ -81,7 +81,7 @@ Consulta todos los medios de pago disponibles y obtén un listado con el detalle
 
     $cardTYpe->issuer // Devuelve una lista de emisores
      
-    $paymenMethod->payer_costs // Devuelve todas las cuotas disponibles
+    $cardTYpe->payer_costs // Devuelve todas las cuotas disponibles
 
     /**
    * Instancia de IdentificationType
