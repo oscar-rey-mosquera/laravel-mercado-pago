@@ -28,13 +28,15 @@ use OscarRey\MercadoPago\Entity\{
   Refund,
   Payer,
   Item,
-  Chargeback
+  Chargeback,
+  CardToken,
+  Issuer
 };
 
 class MercadoPago
 {
 
-   use EntityTrait; 
+  use EntityTrait;
 
   public function __construct()
   {
@@ -103,6 +105,17 @@ class MercadoPago
   }
 
   /**
+   * Instancia de CardToken
+   * @return CardToken
+   * @link https://github.com/mercadopago/sdk-php/blob/master/src/MercadoPago/Entities/CardToken.php
+   */
+  public function cardToken()
+  {
+
+    return new CardToken();
+  }
+
+  /**
    * Instancia de InstoreOrderV2
    * @return InstoreOrderV2
    */
@@ -110,6 +123,17 @@ class MercadoPago
   {
 
     return new InstoreOrderV2();
+  }
+
+
+    /**
+   * Instancia de Issuer
+   * @return Issuer
+   */
+  public function issuer()
+  {
+
+    return new Issuer();
   }
 
 
@@ -299,7 +323,7 @@ class MercadoPago
   }
 
 
-        /**
+  /**
    * crear usuarios para hacer test
    * @link https://www.mercadopago.com.co/developers/es/reference/test_user/_users_test_user/post
    * @param string $site_id id del sitio donde se creará el usuario de prueba.
@@ -314,5 +338,4 @@ class MercadoPago
 
     return $response;
   }
- 
 }

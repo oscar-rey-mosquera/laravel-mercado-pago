@@ -2,6 +2,7 @@
 
 namespace OscarRey\MercadoPago\Tests;
 
+use MercadoPago\SDK;
 use OscarRey\MercadoPago\Facades\MercadoPago;
 
 
@@ -137,6 +138,56 @@ class MecadoPagoTest extends TestCase
         
          
          //47293910
+
+          $cardToken = MercadoPago()->cardToken();
+          
+         
+          $cardToken->card_number = '5254133674403564';
+          $cardToken->expiration_month = '11';
+          $cardToken->expiration_year = '2025';
+          $cardToken->security_code = '123';
+          $cardToken->cardholder = [
+            'name' => 'APRO'
+          ];
+
+          $cardToken->save();
+  
+
+        $payment = MercadoPago()->payment();
+
+        $paymenMethod = MercadoPago()->paymentMethod()->findCreditCard("5254133674403564");
+  
+        $payment->transaction_amount = 500000;
+        $payment->token = $cardToken->id;
+        $payment->description = 'test';
+        $payment->installments = 1;
+        $payment->payment_method_id = $paymenMethod->id;
+        $payment->issuer_id = $paymenMethod->issuer->id;
+   
+        $payment->payer = array(
+          "email" => "test_user_21750243@testuser.com"
+        );
+      
+        $payment->save();
+
+        $this->assertNotNull($payment->id);
+
+
+        // $cardToken = MercadoPago()->cardToken();
+
+        // $cardToken->cardNumber = '5031433215406351';
+        // $cardToken->cardholderName = 'APRO';
+        // $cardToken->cardExpirationMonth = '11';
+        // $cardToken->cardExpirationYear = '2025';
+        // $cardToken->securityCode = '123';
+        // $cardToken->identificationType = 'CPF';
+        // $cardToken->identificationNumber = '12345678912';
+
+        // $cardToken->save();
+
+        // dd($cardToken);
+        
+
        }
  
 }

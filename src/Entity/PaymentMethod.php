@@ -10,6 +10,7 @@ use OscarRey\MercadoPago\Interfaces\ClassToJson;
 
 /**
  * paymentmethod class
+ * @RestMethod(resource="/v1/payment_methods/search", method="search")
  * @RestMethod(resource="/v1/payment_methods", method="list")
  */
 class PaymentMethod extends Entity implements ClassToJson
@@ -123,8 +124,29 @@ class PaymentMethod extends Entity implements ClassToJson
      * @link https://www.mercadopago.com.co/developers/es/reference/payment_methods/_payment_methods/get
      * @return array
      */
+    public function findV2($filters = [])
+    {
+        return static::search($filters);
+    }
+
+    /**
+     * Consultar los medios de pago disponibles 
+     * @link https://www.mercadopago.com.co/developers/es/reference/payment_methods/_payment_methods/get
+     * @return array
+     */
     public function find()
     {
         return static::all();
+    }
+
+    /**
+     * Obtener tipo de targeta de credito por el numero
+     * @param string $cardNumber
+     * @return PaymentMethod
+     */
+    public function findCreditCard($cardNumber)
+    {
+        $credict = $this->findV2(['bins' => $cardNumber ]);
+        return $credict[0];
     }
 }

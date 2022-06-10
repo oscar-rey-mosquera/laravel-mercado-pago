@@ -11,6 +11,7 @@ trait EntityTrait
 {
   use ConfigTrait, ToJsonTrait;
 
+
   public function process_error_body($message)
   {
     $recuperable_error = new RecuperableError(
@@ -200,7 +201,7 @@ trait EntityTrait
   protected function bodyHttp($data)
   {
     return [
-      'json_data' => $this->json($data)
+      'json_data' => $this->json($data),
     ];
   }
 }

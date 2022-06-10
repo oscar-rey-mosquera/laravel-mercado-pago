@@ -9,35 +9,41 @@
 </p>
 
 ## Introducción
+
 Laravel mercado pago es un paquete que te ayuda a implementar el [sdk](https://github.com/mercadopago/sdk-php) de mercado pago para php en laravel.
 
-## 💻 Instalación 
+## 💻 Instalación
 
 Para instalar utiliza composer.
 
 ```.bash
 composer require oscar-rey/laravel-mercado-pago
 ```
-## 🔧 Configuración 
+
+## 🔧 Configuración
 
 Una vez haya hecho la instalación puede agregar la variable de entorno MERCADO_PAGO_ACCESS_TOKEN y MERCADO_PAGO_USER_ID en el archivo .env de tu proyecto de laravel  con el valor de tu access token que encontraras en tu [cuenta de desarrollador de mercado pago](https://www.mercadopago.com.co/developers/panel).
+
 ```bash
 //.env
 MERCADO_PAGO_ACCESS_TOKEN=access_token
 MERCADO_PAGO_USER_ID=user_id
 ```
+
 o llama el metodo initSdk y como parametro le pasas tu access_token
+
 ```php
 MercadoPago()->initSdk($access_token);
 ```
 
-## Publica archivo de configuración 
+## Publica archivo de configuración
 
 Publica el archivo de configuración ejecutando php artisan vendor:publish y selecciona el número que tiene como tag mercado-pago.
 
 ## Uso del paquete
 
-Accede a la funcionalidad del paquete : 
+Accede a la funcionalidad del paquete :
+
 ```php
 use OscarRey\MercadoPago\MercadoPago;
 use OscarRey\MercadoPago\Facades\MercadoPago;
@@ -53,9 +59,10 @@ MercadoPago::hello();
 
 ```
 
-### Obtener medios de pago disponibles y tipos de documentos.
+### Obtener medios de pago disponibles y tipos de documentos
 
-Consulta todos los medios de pago disponibles y obtén un listado con el detalle de cada uno y sus propiedades [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/payment_methods/_payment_methods/get).. 
+Consulta todos los medios de pago disponibles y obtén un listado con el detalle de cada uno y sus propiedades [referencia a la documentación oficial del sdk](https://www.mercadopago.com.co/developers/es/reference/payment_methods/_payment_methods/get)..
+
 ```php
   /**
    * Instancia de PaymentMethod
@@ -66,6 +73,16 @@ Consulta todos los medios de pago disponibles y obtén un listado con el detalle
     // Consultar medios de pago disponibles
     MercadoPago()->paymentMethod()->find();
 
+  // Buscar en medios de pago disponibles
+    MercadoPago()->paymentMethod()->findV2($filters);
+
+    // Buscar medio de pago de tarjeta 
+    $cardType = MercadoPago()->paymentMethod()->findCreditCard('5254133674403564');
+
+    $cardTYpe->issuer // Devuelve una lista de emisores
+     
+    $paymenMethod->payer_costs // Devuelve todas las cuotas disponibles
+
     /**
    * Instancia de IdentificationType
    * @link https://www.mercadopago.com.co/developers/es/reference/identification_types/_identification_types/get
@@ -74,13 +91,16 @@ Consulta todos los medios de pago disponibles y obtén un listado con el detalle
 
     // Consultar tipos de documentos disponibles
     MercadoPago()->identificationType()->find();
+
+     // Buscar en payment 
     
    
 ```
 
-  ### ¿Cómo hacer pruebas en modo desarrollo?
+### ¿Cómo hacer pruebas en modo desarrollo?
 
-Para hacer pruebas con el sdk de mercado pago necesitas crear usuarios de prueba que van a simular roles como vendedores(cuenta de mercado pago con access_token)  o compradores(Un usuario natural que puede o no tener una cuenta de mercado pago normal).[referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-api/integration-test/test-your-integration).
+Para hacer pruebas con el sdk de mercado pago necesitas crear usuarios de prueba que van a simular roles como vendedores(cuenta de mercado pago con access_token)  o compradores(Un usuario natural que puede o no tener una cuenta de mercado pago normal).[referencia a la documentación oficial del sdk](https://www.mercadopago.com.co/developers/es/docs/checkout-api/integration-test/test-your-integration).
+
 ```php
 
  /**
@@ -93,9 +113,52 @@ Para hacer pruebas con el sdk de mercado pago necesitas crear usuarios de prueba
  
  ```
 
+### Tokenizar tarjeta en el servidor
+
+```php
+
+ /**
+   * Nota: si deseas tokenizar la tarjeta de crédito de tus usuarios en tu servidor, recuerda comprometerte a no guardar datos sensibles de las tarjetas 
+   */
+
+ /**
+   * Instancia de cardToken
+   * @link https://github.com/oscar-rey-mosquera/laravel-mercado-pago/blob/main/src/Entity/CardToken.php
+   */
+  $cardToken = MercadoPago()->cardToken();
+
+  $cardToken->card_number = '5254133674403564';
+  $cardToken->expiration_month = '11';
+  $cardToken->expiration_year = '2025';
+  $cardToken->security_code = '123';
+  $cardToken->cardholder = [ // este campo solo es obligatorio cuando hagas test, ya que de no ponerle un estado esperado mercado pago te arrojara un error cuando trates de generar un pago vía tarjeta
+            'name' => 'APRO'
+          ];
+
+  $cardToken->save();
+
+  $cardToken->id // token de targeta
+
+  // o utiliza el método create para mandar un array
+
+  $cardToken =  MercadoPago()->cardToken()->create(
+     'card_number' => '5254133674403564',
+     'expiration_month' => '11',
+     'expiration_year' => '2025',
+     'security_code' => '123',
+     'cardholder' => [
+        'name' => 'APRO'
+     ]);
+
+   $cardToken // resultado
+
+ 
+ ```
+
 ### Integra Checkout API para pagos con tarjetas
 
-La integración del Checkout API de Mercado Pago para tarjetas permite que puedas ofrecer una opción de pagos completa dentro de tu sitio [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/receiving-payment-by-card).
+La integración del Checkout API de Mercado Pago para tarjetas permite que puedas ofrecer una opción de pagos completa dentro de tu sitio [referencia a la documentación oficial del sdk](https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/receiving-payment-by-card).
+
 ```php
 
  /**
@@ -121,9 +184,10 @@ $payment->payer = array(
  dd($payment);
  ```
 
- ### Integra otros medios de pago
+### Integra otros medios de pago
 
-Con el Checkout API de Mercado Pago puedes sumar otras alternativas de medios de pago para ofrecer a tus clientes a la hora de realizar el pago [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/other-payment-methods).
+Con el Checkout API de Mercado Pago puedes sumar otras alternativas de medios de pago para ofrecer a tus clientes a la hora de realizar el pago [referencia a la documentación oficial del sdk](https://www.mercadopago.com.co/developers/es/docs/checkout-api/payment-methods/other-payment-methods).
+
 ```php
 
  /**
@@ -170,7 +234,8 @@ Con el Checkout API de Mercado Pago puedes sumar otras alternativas de medios de
 
 ### Recuerda tus clientes y sus tarjetas
 
-Usa nuestras APIs para guardar la referencia de las tarjetas de tus clientes y poder brindarles una mejor experiencia. De esta manera, tus clientes no tienen que completar sus datos cada vez y pueden finalizar sus pagos más rápido. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-api/advanced-integration/remember-customers-and-cards#editor_1).
+Usa nuestras APIs para guardar la referencia de las tarjetas de tus clientes y poder brindarles una mejor experiencia. De esta manera, tus clientes no tienen que completar sus datos cada vez y pueden finalizar sus pagos más rápido. [referencia a la documentación oficial del sdk](https://www.mercadopago.com.co/developers/es/docs/checkout-api/advanced-integration/remember-customers-and-cards#editor_1).
+
 ```php
  /**
    * Instancia de Customer
@@ -246,11 +311,11 @@ Usa nuestras APIs para guardar la referencia de las tarjetas de tus clientes y p
  
  ```
 
- ### Reembolsos y cancelaciones
+### Reembolsos y cancelaciones
 
 Reembolsos son transacciones que se realizan cuando un determinado cargo se revierte y las cantidades pagadas se devuelven al comprador. Esto significa que el cliente recibirá en su cuenta o en el extracto de su tarjeta de crédito el monto pagado por la compra de un determinado producto o servicio.
 
-Cancelaciones ocurren cuando se realiza una compra pero el pago aún no ha sido aprobado por algún motivo. En este caso, considerando que la transacción no fue procesada y el establecimiento no recibió ningún monto, la compra se cancela y no hay cargo. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/cancellations-and-refunds).
+Cancelaciones ocurren cuando se realiza una compra pero el pago aún no ha sido aprobado por algún motivo. En este caso, considerando que la transacción no fue procesada y el establecimiento no recibió ningún monto, la compra se cancela y no hay cargo. [referencia a la documentación oficial del sdk](https://www.mercadopago.com.co/developers/es/docs/checkout-api/additional-content/cancellations-and-refunds).
 
 ```php
 
@@ -300,7 +365,7 @@ Cancelaciones ocurren cuando se realiza una compra pero el pago aún no ha sido 
 
 Necesitas integrar Checkout Pro configurado como modo billetera para agregar la billetera de Mercado Pago en tu sitio.
 
-Para integrarlo, tienes que generar la preferencia de pago con la información del producto o servicio que quieras ofrecer y agregar la opción de pago en tu sitio. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-api/wallet-integration/wallet-addto-website).
+Para integrarlo, tienes que generar la preferencia de pago con la información del producto o servicio que quieras ofrecer y agregar la opción de pago en tu sitio. [referencia a la documentación oficial del sdk](https://www.mercadopago.com.co/developers/es/docs/checkout-api/wallet-integration/wallet-addto-website).
 
 ```php
 
@@ -323,8 +388,9 @@ dd($preference) // resultado
  ```
 
 ### Integración de un marketplace
+
 Marketplace es un sitio/plataforma de comercio electrónico que conecta a vendedores y compradores en un mismo entorno de ventas, permitiendo la venta de productos y/o servicios online con mayor alcance y posibilidad de conversión.
-[referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/docs/checkout-pro/how-tos/integrate-marketplace).
+[referencia a la documentación oficial del sdk](https://www.mercadopago.com.co/developers/es/docs/checkout-pro/how-tos/integrate-marketplace).
 
 ```php
 // paso 1 - genera la url y redirige al vendedor que quiera asocial su cuenta de mercado pago con tun aplicación.
@@ -351,7 +417,8 @@ MercadoPago()->oauth()->oauthCredentials($authorization_code);
  ```
 
 ### Crear orden
-Genera una orden para asociarla a la preferencia de pago y obtén la URL necesaria para iniciar el flujo de pago. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/merchant_orders/_merchant_orders/post).
+
+Genera una orden para asociarla a la preferencia de pago y obtén la URL necesaria para iniciar el flujo de pago. [referencia a la documentación oficial del sdk](https://www.mercadopago.com.co/developers/es/reference/merchant_orders/_merchant_orders/post).
 
 ```php
 /**
@@ -386,8 +453,9 @@ merchantOrder reemplaza los campos a actualizar y luego ejecuta el método updat
 
  ```
 
- ### Crear preferencia
-Genera una preferencia con la información de un producto o servicio y obtén la URL necesaria para iniciar el flujo de pago. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/preferences/_checkout_preferences/post).
+### Crear preferencia
+
+Genera una preferencia con la información de un producto o servicio y obtén la URL necesaria para iniciar el flujo de pago. [referencia a la documentación oficial del sdk](https://www.mercadopago.com.co/developers/es/reference/preferences/_checkout_preferences/post).
 
 ```php
 /**
@@ -421,8 +489,9 @@ preference reemplaza los campos a actualizar y luego ejecuta el método update()
   */
  ```
 
- ### Crear caja
-Genera un punto de venta en una sucursal. Cada caja tendrá vinculado un código QR unívoco. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/pos/_pos/post).
+### Crear caja
+
+Genera un punto de venta en una sucursal. Cada caja tendrá vinculado un código QR unívoco. [referencia a la documentación oficial del sdk](https://www.mercadopago.com.co/developers/es/reference/pos/_pos/post).
 
 ```php
 /**
@@ -465,8 +534,9 @@ preference reemplaza los campos a actualizar y luego ejecuta el método update()
 
  ```
 
- ### Crear orden 
-Genera una orden de pago asociada a la caja que quieras con toda la información de pago de tu producto o servicio. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/instore_orders/_mpmobile_instore_qr_user_id_external_id/post).
+### Crear orden
+
+Genera una orden de pago asociada a la caja que quieras con toda la información de pago de tu producto o servicio. [referencia a la documentación oficial del sdk](https://www.mercadopago.com.co/developers/es/reference/instore_orders/_mpmobile_instore_qr_user_id_external_id/post).
 
 ```php
 /**
@@ -496,9 +566,11 @@ Genera una orden de pago asociada a la caja que quieras con toda la información
  $instoreOrder = MercadoPago()->instoreOrderV2()->deleteV2($user_id, $external_pos_id);
 
  ```
- ### Crear sucursal 
+
+### Crear sucursal
+
 Genera una tienda física en la que los clientes pueden adquirir los productos o servicios. Puedes crear más de una sucursal por cuenta.
-[referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/stores/_users_user_id_stores/post).
+[referencia a la documentación oficial del sdk](https://www.mercadopago.com.co/developers/es/reference/stores/_users_user_id_stores/post).
 
 ```php
 /**
@@ -550,8 +622,10 @@ $stores = MercadoPago()->store()->updateV2($store_id,
 ]);
 
  ```
-  ### Create a QR tramma
-Genera un tramma QR que se agregará a una imagen. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/qr-dynamic/_instore_orders_qr_seller_collectors_user_id_pos_external_pos_id_qrs/post).
+
+### Create a QR tramma
+
+Genera un tramma QR que se agregará a una imagen. [referencia a la documentación oficial del sdk](https://www.mercadopago.com.co/developers/es/reference/qr-dynamic/_instore_orders_qr_seller_collectors_user_id_pos_external_pos_id_qrs/post).
 
 ```php
 /**
@@ -566,8 +640,10 @@ $instoreOrderQr = MercadoPago()->instoreOrderQr()->create(8787, [
 ]);
 
  ```
-   ### Crear suscripción
-Una suscripción es la unión entre un plan y un cliente. La principal característica de este contrato es que tiene configurada una forma de pago y es la base para la creación de las facturas. También puedes crear una suscripción sin un plan. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval/post).
+
+### Crear suscripción
+
+Una suscripción es la unión entre un plan y un cliente. La principal característica de este contrato es que tiene configurada una forma de pago y es la base para la creación de las facturas. También puedes crear una suscripción sin un plan. [referencia a la documentación oficial del sdk](https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval/post).
 
 ```php
 /**
@@ -601,8 +677,10 @@ $preapproval = MercadoPago()->preapproval()->findById($preapproval_id);
 preapproval reemplaza los campos a actualizar y luego ejecuta el método update() de la instancia
   */
  ```
-   ### Crear un plan de suscripción
-Un plan es un template para crear suscripciones que indican con qué frecuencia y cuánto cobrar a tus clientes. Se pueden crear planes con pruebas gratuitas, ciclos de facturación y más. Las suscripciones creadas a partir de un plan están relacionadas con el mismo y permiten sincronizar modificaciones como reason o amount. [referencia a la documentación oficial del sdk ](https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan/post).
+
+### Crear un plan de suscripción
+
+Un plan es un template para crear suscripciones que indican con qué frecuencia y cuánto cobrar a tus clientes. Se pueden crear planes con pruebas gratuitas, ciclos de facturación y más. Las suscripciones creadas a partir de un plan están relacionadas con el mismo y permiten sincronizar modificaciones como reason o amount. [referencia a la documentación oficial del sdk](https://www.mercadopago.com.co/developers/es/reference/subscriptions/_preapproval_plan/post).
 
 ```php
 /**

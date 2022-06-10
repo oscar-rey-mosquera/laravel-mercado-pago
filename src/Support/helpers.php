@@ -1,12 +1,11 @@
 <?php
 
 use OscarRey\MercadoPago\MercadoPago;
-use Illuminate\Contracts\Foundation\Application;
 
 if (!function_exists("cloudinary")) {
 
     /**
-     * @return Application|mixed
+     * @return MercadoPago
      */
     function MercadoPago()
     {
