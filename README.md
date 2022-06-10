@@ -79,9 +79,9 @@ Consulta todos los medios de pago disponibles y obtén un listado con el detalle
     // Buscar medio de pago de tarjeta 
     $cardType = MercadoPago()->paymentMethod()->findCreditCard('5254133674403564');
 
-    $cardTYpe->issuer // Devuelve una lista de emisores
+    $cardTYpe->issuer; // Devuelve una lista de emisores
      
-    $cardTYpe->payer_costs // Devuelve todas las cuotas disponibles
+    $cardTYpe->payer_costs; // Devuelve todas las cuotas disponibles
 
     /**
    * Instancia de IdentificationType
