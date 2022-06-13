@@ -2,7 +2,7 @@
 
 use LaravelMercadoPago\MercadoPago;
 
-if (!function_exists("cloudinary")) {
+if (!function_exists("MercadoPago")) {
 
     /**
      * @return MercadoPago
