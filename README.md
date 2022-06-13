@@ -6,7 +6,10 @@
 <a href="https://packagist.org/packages/oscar-rey/laravel-mercado-pago"><img src="https://img.shields.io/packagist/dt/oscar-rey/laravel-mercado-pago" alt="Total Downloads"></a>
 <a href="https://packagist.org/packages/oscar-rey/laravel-mercado-pago"><img src="https://img.shields.io/packagist/v/oscar-rey/laravel-mercado-pago" alt="Latest Stable Version"></a>
 <a href="https://packagist.org/packages/oscar-rey/laravel-mercado-pago"><img src="https://img.shields.io/packagist/l/oscar-rey/laravel-mercado-pago" alt="License"></a>
+ <a href="https://github.com/oscar-rey-mosquera/laravel-mercado-pago/actions/workflows/test.yml"><img src="https://github.com/oscar-rey-mosquera/laravel-mercado-pago/actions/workflows/test.yml/badge.svg" alt="Test"></a>
 </p>
+
+
 
 ## Introducción
 
@@ -45,8 +48,8 @@ Publica el archivo de configuración ejecutando php artisan vendor:publish y sel
 Accede a la funcionalidad del paquete :
 
 ```php
-use OscarRey\MercadoPago\MercadoPago;
-use OscarRey\MercadoPago\Facades\MercadoPago;
+use LaravelMercadoPago\MercadoPago;
+use LaravelMercadoPago\Facades\MercadoPago;
 
 //Helper global
 MercadoPago()->hello();
