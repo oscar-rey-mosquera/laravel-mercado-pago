@@ -1,14 +1,14 @@
 <?php
 
-namespace OscarRey\MercadoPago\Entity;
+namespace LaravelMercadoPago\Entity;
 
 use MercadoPago\SDK;
 use MercadoPago\Entity;
 use MercadoPago\Annotation\Attribute;
 use MercadoPago\Annotation\RestMethod;
 use MercadoPago\Annotation\RequestParam;
-use OscarRey\MercadoPago\Traits\EntityTrait;
-use OscarRey\MercadoPago\Interfaces\ClassToJson;
+use LaravelMercadoPago\Traits\EntityTrait;
+use LaravelMercadoPago\Interfaces\ClassToJson;
 
 /**
  * @link https://www.mercadopago.com.co/developers/es/reference/qr-dynamic/_instore_orders_qr_seller_collectors_user_id_pos_external_pos_id_qrs/post Click here for more infos

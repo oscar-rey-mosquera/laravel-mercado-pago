@@ -1,5 +1,5 @@
 <?php
-namespace OscarRey\MercadoPago\Traits;
+namespace LaravelMercadoPago\Traits;
 
 use Illuminate\Database\Eloquent\JsonEncodingException;
 

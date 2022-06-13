@@ -1,5 +1,5 @@
 <?php
-namespace OscarRey\MercadoPago\Interfaces;
+namespace LaravelMercadoPago\Interfaces;
 
 use JsonSerializable;
 use Illuminate\Contracts\Support\Jsonable;

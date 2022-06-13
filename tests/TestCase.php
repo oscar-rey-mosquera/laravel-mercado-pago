@@ -1,8 +1,8 @@
 <?php
 
-namespace OscarRey\MercadoPago\Tests;
+namespace LaravelMercadoPago\Tests;
 
-use OscarRey\MercadoPago\MercadoPagoServiceProvider;
+use LaravelMercadoPago\MercadoPagoServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {

@@ -1,5 +1,5 @@
 <?php
-namespace OscarRey\MercadoPago\Entity;
+namespace LaravelMercadoPago\Entity;
 
 use MercadoPago\SDK;
 use MercadoPago\Entity;
@@ -7,8 +7,8 @@ use MercadoPago\Annotation\Attribute;
 use MercadoPago\Annotation\RestMethod;
 use MercadoPago\Annotation\RequestParam;
 use MercadoPago\Card as MercadoPagoCard;
-use OscarRey\MercadoPago\Traits\EntityTrait;
-use OscarRey\MercadoPago\Interfaces\ClassToJson;
+use LaravelMercadoPago\Traits\EntityTrait;
+use LaravelMercadoPago\Interfaces\ClassToJson;
 
 /**
  * The cards class is the way to store card data of your customers safely to improve the shopping experience.

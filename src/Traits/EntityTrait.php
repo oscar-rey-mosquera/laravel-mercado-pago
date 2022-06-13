@@ -1,11 +1,11 @@
 <?php
 
-namespace OscarRey\MercadoPago\Traits;
+namespace LaravelMercadoPago\Traits;
 
 use Exception;
 use MercadoPago\Entity;
 use MercadoPago\RecuperableError;
-use OscarRey\MercadoPago\Generic\SearchResultsArray;
+use LaravelMercadoPago\Generic\SearchResultsArray;
 
 trait EntityTrait
 {

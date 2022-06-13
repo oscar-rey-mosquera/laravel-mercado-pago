@@ -26,7 +26,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "OscarRey\\MercadoPago\\": "src/"
+            "LaravelMercadoPago\\": "src/"
         },
         "files": [
             "src/Support/helpers.php"
@@ -34,16 +34,16 @@
     },
     "autoload-dev": {
         "psr-4": {
-          "OscarRey\\MercadoPago\\Tests\\": "tests"
+          "LaravelMercadoPago\\Tests\\": "tests"
         }
       },
     "extra": {
         "laravel": {
             "providers": [
-                "OscarRey\\MercadoPago\\MercadoPagoServiceProvider"
+                "LaravelMercadoPago\\MercadoPagoServiceProvider"
             ],
             "aliases": {
-                "MercadoPago": "OscarRey\\MercadoPago\\Facades\\MercadoPago"
+                "MercadoPago": "LaravelMercadoPago\\Facades\\MercadoPago"
             }
         }
     },

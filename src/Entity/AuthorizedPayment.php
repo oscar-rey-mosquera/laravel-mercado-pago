@@ -1,8 +1,8 @@
 <?php
-namespace OscarRey\MercadoPago\Entity;
+namespace LaravelMercadoPago\Entity;
 
-use OscarRey\MercadoPago\Traits\EntityTrait;
-use OscarRey\MercadoPago\Interfaces\ClassToJson;
+use LaravelMercadoPago\Traits\EntityTrait;
+use LaravelMercadoPago\Interfaces\ClassToJson;
 use MercadoPago\AuthorizedPayment as MercadoPagoAuthorizedPayment;
 
 class AuthorizedPayment extends MercadoPagoAuthorizedPayment implements ClassToJson

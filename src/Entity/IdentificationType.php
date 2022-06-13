@@ -1,12 +1,12 @@
 <?php
 
-namespace OscarRey\MercadoPago\Entity;
+namespace LaravelMercadoPago\Entity;
 
 use MercadoPago\Entity;
 use MercadoPago\Annotation\Attribute;
 use MercadoPago\Annotation\RestMethod;
-use OscarRey\MercadoPago\Traits\EntityTrait;
-use OscarRey\MercadoPago\Interfaces\ClassToJson;
+use LaravelMercadoPago\Traits\EntityTrait;
+use LaravelMercadoPago\Interfaces\ClassToJson;
 
 /**
  * identificationtype class

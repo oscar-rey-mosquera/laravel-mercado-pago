@@ -1,5 +1,5 @@
 <?php
-namespace OscarRey\MercadoPago\Facades;
+namespace LaravelMercadoPago\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

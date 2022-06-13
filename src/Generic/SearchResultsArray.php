@@ -1,7 +1,7 @@
 <?php
-namespace OscarRey\MercadoPago\Generic;
+namespace LaravelMercadoPago\Generic;
 
-use OscarRey\MercadoPago\Traits\EntityTrait;
+use LaravelMercadoPago\Traits\EntityTrait;
 
 
 class SearchResultsArray extends \MercadoPago\SearchResultsArray

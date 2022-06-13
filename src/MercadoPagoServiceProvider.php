@@ -1,8 +1,7 @@
 <?php
 
-namespace OscarRey\MercadoPago;
+namespace LaravelMercadoPago;
 
-use OscarRey\MercadoPago\MercadoPago;
 use Illuminate\Support\ServiceProvider;
 
 class MercadoPagoServiceProvider extends ServiceProvider

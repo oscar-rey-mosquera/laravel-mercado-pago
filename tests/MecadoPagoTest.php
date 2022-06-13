@@ -1,9 +1,9 @@
 <?php
 
-namespace OscarRey\MercadoPago\Tests;
+namespace LaravelMercadoPago\Tests;
 
 use MercadoPago\SDK;
-use OscarRey\MercadoPago\Facades\MercadoPago;
+use LaravelMercadoPago\Facades\MercadoPago;
 
 
 class MecadoPagoTest extends TestCase

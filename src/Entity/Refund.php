@@ -1,10 +1,10 @@
 <?php
-namespace OscarRey\MercadoPago\Entity;
+namespace LaravelMercadoPago\Entity;
 
 use MercadoPago\SDK;
 use MercadoPago\Refund as MercadoPagoRefund;
-use OscarRey\MercadoPago\Traits\EntityTrait;
-use OscarRey\MercadoPago\Interfaces\ClassToJson;
+use LaravelMercadoPago\Traits\EntityTrait;
+use LaravelMercadoPago\Interfaces\ClassToJson;
 
 
 class Refund extends MercadoPagoRefund implements ClassToJson

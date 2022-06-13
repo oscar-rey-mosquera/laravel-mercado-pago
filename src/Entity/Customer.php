@@ -1,10 +1,9 @@
 <?php
-namespace OscarRey\MercadoPago\Entity;
+namespace LaravelMercadoPago\Entity;
 
-use MercadoPago\SDK;
-use OscarRey\MercadoPago\Traits\EntityTrait;
+use LaravelMercadoPago\Traits\EntityTrait;
 use MercadoPago\Customer as MercadoPagoCustomer;
-use OscarRey\MercadoPago\Interfaces\ClassToJson;
+use LaravelMercadoPago\Interfaces\ClassToJson;
 
 
 class Customer extends MercadoPagoCustomer implements ClassToJson

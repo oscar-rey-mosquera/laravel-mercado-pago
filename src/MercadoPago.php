@@ -1,15 +1,15 @@
 <?php
 
-namespace OscarRey\MercadoPago;
+namespace LaravelMercadoPago;
 
 use MercadoPago\{
   SDK,
   InstoreOrder
 };
 
-use OscarRey\MercadoPago\Traits\EntityTrait;
+use LaravelMercadoPago\Traits\EntityTrait;
 
-use OscarRey\MercadoPago\Entity\{
+use LaravelMercadoPago\Entity\{
   Preapproval,
   Plan,
   PaymentMethod,

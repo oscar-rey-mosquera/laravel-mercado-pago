@@ -1,6 +1,6 @@
 <?php
 
-use OscarRey\MercadoPago\MercadoPago;
+use LaravelMercadoPago\MercadoPago;
 
 if (!function_exists("cloudinary")) {
 
